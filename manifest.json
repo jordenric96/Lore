@@ -1,0 +1,16 @@
+{
+  "name": "Lore's Skin Journey",
+  "short_name": "Skin Journey",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#fff8fa",
+  "theme_color": "#d05e5e",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "icon.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ]
+}
