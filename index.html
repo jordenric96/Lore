@@ -3,12 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Lore's Skin Journey</title>
+    <title>Lore's Skin Journey 2026</title>
     
     <link rel="manifest" href="manifest.json">
     <link rel="icon" type="image/jpeg" href="1768758855207.jpg">
     <link rel="apple-touch-icon" href="1768758855207.jpg">
-    
     <meta name="theme-color" content="#fff8fa">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -16,20 +15,38 @@
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     
     <style>
-        /* --- 1. Global Reset & Variabelen --- */
+        /* --- 1. Variabelen (Light & Dark) --- */
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         
         :root {
+            /* Light Mode (Default) */
             --bg-color: #fff8fa;
             --card-bg: #ffffff;
+            --text: #4a4a4a;
+            --text-muted: #888;
             --terracotta: #d05e5e;
             --gold: #ffb703;
-            --text: #4a4a4a;
             --success: #27ae60;
-            
+            --border-color: #eee;
+            --modal-bg: #ffffff;
+            --chip-bg: #f3f3f3;
+            --shadow: rgba(0,0,0,0.05);
+
             --retinol-border: #f783ac;
             --peptide-border: #8da399;
             --mask-border: #74c0fc;
+        }
+
+        body.dark-mode {
+            --bg-color: #18181b;
+            --card-bg: #27272a;
+            --text: #e4e4e7;
+            --text-muted: #a1a1aa;
+            --terracotta: #e07a7a; /* Iets lichter voor contrast */
+            --border-color: #3f3f46;
+            --modal-bg: #27272a;
+            --chip-bg: #3f3f46;
+            --shadow: rgba(0,0,0,0.3);
         }
 
         body {
@@ -37,92 +54,138 @@
             background-color: var(--bg-color);
             color: var(--text);
             margin: 0;
-            padding: 20px 15px 80px 15px;
+            padding: 20px 15px 40px 15px;
             overflow-x: hidden;
             user-select: none;
+            min-height: 100vh;
+            transition: background 0.3s, color 0.3s;
         }
 
         .container { max-width: 500px; margin: 0 auto; width: 100%; }
 
-        /* --- 2. Header --- */
+        /* --- 2. Header & Nav --- */
+        .top-nav { display: flex; justify-content: space-between; margin-bottom: 10px; }
+        .icon-btn { background: none; border: none; font-size: 1.5em; cursor: pointer; color: var(--text); padding: 5px; }
+
         header { text-align: center; margin-bottom: 20px; }
-        
         h1 { font-weight: 700; margin: 0 0 10px 0; font-size: 1.8em; line-height: 1.2; }
         .name-highlight { color: var(--terracotta); font-family: 'Georgia', serif; font-style: italic; }
 
-        .stats-row { display: flex; justify-content: space-between; align-items: center; font-size: 0.8em; color: #888; margin-bottom: 10px; padding: 0 5px; }
-        .streak-badge { background: #fff; padding: 4px 10px; border-radius: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); font-weight: bold; color: var(--terracotta); }
+        .stats-row { display: flex; justify-content: space-between; align-items: center; font-size: 0.8em; color: var(--text-muted); margin-bottom: 10px; padding: 0 5px; }
+        .streak-badge { background: var(--card-bg); padding: 4px 10px; border-radius: 12px; box-shadow: 0 2px 5px var(--shadow); font-weight: bold; color: var(--terracotta); }
 
-        .progress-container { background: #e9ecef; border-radius: 20px; height: 8px; width: 100%; overflow: hidden; margin-bottom: 20px; }
+        .progress-container { background: var(--chip-bg); border-radius: 20px; height: 8px; width: 100%; overflow: hidden; margin-bottom: 20px; }
         .progress-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--terracotta), var(--gold)); transition: width 0.6s ease; }
 
-        .tabs { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; }
-        .tab-btn { flex: 1; padding: 12px; border: none; border-radius: 15px; background: white; color: #999; font-weight: 600; cursor: pointer; transition: 0.2s; box-shadow: 0 2px 5px rgba(0,0,0,0.03); }
-        .tab-btn.active { background: var(--terracotta); color: white; box-shadow: 0 4px 12px rgba(208, 94, 94, 0.3); }
-
-        /* --- 3. Kalender Grid --- */
-        .weekdays { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; font-weight: bold; color: #aaa; margin-bottom: 8px; font-size: 0.75em; text-transform: uppercase; }
-
-        .calendar-wrapper { display: none; }
-        .calendar-wrapper.active { display: block; animation: fadeIn 0.4s; }
-
-        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
-
-        .day-card {
-            background: var(--card-bg);
-            border-radius: 12px;
-            aspect-ratio: 1 / 1.25;
-            padding: 4px;
-            display: flex; 
-            flex-direction: column; 
-            align-items: center;
-            justify-content: space-between;
-            cursor: pointer; position: relative;
-            border: 2px solid transparent;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.03);
-            transition: transform 0.1s;
+        /* Scrollable Months */
+        .month-scroller {
+            display: flex; overflow-x: auto; gap: 10px; padding: 5px 5px 15px 5px;
+            margin-bottom: 10px; scrollbar-width: none;
+        }
+        .month-scroller::-webkit-scrollbar { display: none; }
+        
+        .month-chip {
+            flex: 0 0 auto; padding: 8px 18px; border-radius: 20px;
+            background: var(--card-bg); color: var(--text-muted);
+            font-weight: 600; font-size: 0.9em; cursor: pointer;
+            box-shadow: 0 2px 5px var(--shadow); transition: 0.2s;
+            border: 1px solid transparent;
+        }
+        .month-chip.active {
+            background: var(--terracotta); color: white;
+            box-shadow: 0 4px 10px rgba(208, 94, 94, 0.4); transform: scale(1.05);
         }
 
+        /* --- 3. Kalender --- */
+        .weekdays { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; font-weight: bold; color: var(--text-muted); margin-bottom: 8px; font-size: 0.75em; text-transform: uppercase; }
+        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; animation: fadeIn 0.3s; }
+
+        .day-card {
+            background: var(--card-bg); border-radius: 12px; aspect-ratio: 1 / 1.35; padding: 4px;
+            display: flex; flex-direction: column; align-items: center; justify-content: space-between;
+            cursor: pointer; border: 2px solid transparent;
+            box-shadow: 0 2px 4px var(--shadow); transition: transform 0.1s;
+        }
         .day-card:active { transform: scale(0.95); }
 
+        /* Type borders */
         .day-card[data-type="Retinol"] { border-bottom: 3px solid var(--retinol-border); }
         .day-card[data-type="Peptides"] { border-bottom: 3px solid var(--peptide-border); }
         .day-card[data-type="Mask"] { border-bottom: 3px solid var(--mask-border); }
 
-        .day-card.today { border-color: var(--gold) !important; background: #fffdf0; }
-        .day-card.all-done { opacity: 0.6; background-color: #f1f8f5; border-color: var(--success) !important; }
+        .day-card.today { border-color: var(--gold) !important; background: rgba(255, 183, 3, 0.1); }
+        
+        /* Icons in calendar */
+        .day-icons { display: flex; gap: 2px; height: 10px; font-size: 8px; align-items: center; }
+        .icon-cam { display: none; } 
+        .day-card.has-selfie .icon-cam { display: inline; }
 
-        .day-content { flex-grow: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; width: 100%; }
-        .day-number { font-weight: 700; font-size: 1.1em; line-height: 1; margin-bottom: 3px; }
-        .day-mini-label { font-size: 0.55em; color: #999; text-transform: uppercase; white-space: nowrap; overflow: hidden; max-width: 100%; text-overflow: ellipsis; }
+        .day-number { font-weight: 700; font-size: 1.1em; line-height: 1; margin-bottom: 2px; }
+        .day-mini-label { font-size: 0.5em; color: var(--text-muted); text-transform: uppercase; white-space: nowrap; overflow: hidden; max-width: 100%; }
         
         .dots { display: flex; gap: 3px; height: 6px; margin-bottom: 4px; }
-        .dot { width: 6px; height: 6px; border-radius: 50%; background: #eee; }
+        .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--chip-bg); }
         .dot.done { background: var(--success); }
         .empty-day { visibility: hidden; }
 
         /* --- 4. Modal --- */
         .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: none; align-items: flex-end; justify-content: center; z-index: 2000; backdrop-filter: blur(2px); }
-        .modal-content { background: #fff; width: 100%; max-width: 500px; padding: 25px; border-radius: 25px 25px 0 0; box-shadow: 0 -10px 40px rgba(0,0,0,0.2); animation: slideUp 0.3s; max-height: 85vh; overflow-y: auto; }
+        .modal-content { 
+            background: var(--modal-bg); width: 100%; max-width: 500px; padding: 25px; 
+            border-radius: 25px 25px 0 0; box-shadow: 0 -10px 40px rgba(0,0,0,0.3); 
+            animation: slideUp 0.3s; max-height: 90vh; overflow-y: auto; 
+        }
         
-        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
         .modal-title h2 { margin: 0; font-size: 1.4em; color: var(--text); }
-        .tag { padding: 4px 10px; border-radius: 8px; font-size: 0.8em; font-weight: bold; }
+        .tag-focus { padding: 4px 10px; border-radius: 8px; font-size: 0.8em; font-weight: bold; background: var(--chip-bg); }
 
-        .routine-box { background: white; border: 1px solid #eee; border-radius: 16px; padding: 15px; margin-bottom: 12px; cursor: pointer; display: flex; align-items: flex-start; transition: 0.2s; box-shadow: 0 4px 10px rgba(0,0,0,0.02); }
-        .routine-box:active { transform: scale(0.98); background: #f9f9f9; }
-        .routine-box.completed { background: #f0fdf4; border-color: var(--success); }
+        .routine-box { 
+            background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; 
+            padding: 15px; margin-bottom: 12px; cursor: pointer; display: flex; align-items: flex-start; 
+            transition: 0.2s; box-shadow: 0 4px 10px var(--shadow); 
+        }
+        .routine-box.completed { background: rgba(39, 174, 96, 0.1); border-color: var(--success); }
         
         .check-circle { min-width: 26px; height: 26px; border-radius: 50%; border: 2px solid #ddd; margin-right: 15px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 14px; }
         .routine-box.completed .check-circle { background: var(--success); border-color: var(--success); }
         .routine-box.completed .check-circle::after { content: "✓"; }
 
-        .routine-content h4 { margin: 0 0 5px 0; font-size: 1em; }
-        .routine-list { margin: 0; padding-left: 15px; font-size: 0.9em; color: #666; line-height: 1.5; }
-        .routine-list li { margin-bottom: 3px; }
+        .routine-content h4 { margin: 0 0 5px 0; font-size: 1em; color: var(--text); }
+        .routine-list { margin: 0; padding-left: 15px; font-size: 0.9em; color: var(--text-muted); line-height: 1.5; }
         strong { color: var(--terracotta); }
 
-        .btn-close { width: 100%; padding: 14px; background: #f1f3f5; border: none; border-radius: 12px; font-weight: bold; color: #555; margin-top: 10px; font-size: 1em; }
+        /* Diary Section */
+        .diary-section { margin-top: 20px; padding-top: 15px; border-top: 1px solid var(--border-color); }
+        .diary-title { font-size: 0.9em; font-weight: bold; margin-bottom: 10px; color: var(--text-muted); }
+        
+        /* Stars */
+        .stars { display: flex; gap: 8px; margin-bottom: 15px; }
+        .star { font-size: 1.8em; cursor: pointer; color: var(--border-color); transition: 0.2s; }
+        .star.active { color: var(--gold); }
+
+        /* Tags */
+        .tags-container { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 15px; }
+        .tag-chip { 
+            padding: 6px 12px; border-radius: 15px; background: var(--chip-bg); color: var(--text-muted); 
+            font-size: 0.85em; cursor: pointer; border: 1px solid transparent; 
+        }
+        .tag-chip.selected { background: var(--terracotta); color: white; }
+
+        /* Selfie Toggle */
+        .selfie-toggle { 
+            display: flex; align-items: center; gap: 10px; cursor: pointer; 
+            padding: 10px; background: var(--chip-bg); border-radius: 12px; width: fit-content;
+        }
+        .selfie-toggle.active { background: #dbeafe; color: #1e40af; } /* Blauw tintje */
+
+        .btn-close { width: 100%; padding: 14px; background: var(--chip-bg); border: none; border-radius: 12px; font-weight: bold; color: var(--text); margin-top: 20px; font-size: 1em; }
+
+        /* Settings Overlay */
+        #settings-modal .modal-content { text-align: center; }
+        .btn-action { display: block; width: 100%; padding: 12px; margin: 10px 0; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; }
+        .btn-backup { background: var(--terracotta); color: white; }
+        .btn-restore { background: var(--chip-bg); color: var(--text); }
 
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
@@ -132,26 +195,25 @@
 <body>
 
 <div class="container">
+    <div class="top-nav">
+        <button class="icon-btn" onclick="openSettings()">⚙️</button>
+        <button class="icon-btn" onclick="toggleDarkMode()">🌙</button>
+    </div>
+
     <header>
         <h1>✨ <span class="name-highlight">Lore's</span> Skin Journey</h1>
         
         <div class="stats-row">
             <span id="progress-text">0% voltooid</span>
-            <div class="streak-badge">🔥 <span id="streak-count">0</span> Dagen Streak</div>
+            <div class="streak-badge">🔥 <span id="streak-count">0</span> Dagen</div>
         </div>
 
         <div class="progress-container"><div class="progress-fill" id="progress-bar"></div></div>
-
-        <div class="tabs">
-            <button class="tab-btn active" onclick="switchMonth(0)">Januari</button>
-            <button class="tab-btn" onclick="switchMonth(1)">Februari</button>
-        </div>
+        <div class="month-scroller" id="month-scroller"></div>
     </header>
 
     <div class="weekdays"><div>Zo</div><div>Ma</div><div>Di</div><div>Wo</div><div>Do</div><div>Vr</div><div>Za</div></div>
-
-    <div id="calendar-jan" class="calendar-wrapper active"><div class="calendar-grid" id="grid-0"></div></div>
-    <div id="calendar-feb" class="calendar-wrapper"><div class="calendar-grid" id="grid-1"></div></div>
+    <div class="calendar-grid" id="main-grid"></div>
 </div>
 
 <div id="modal" class="modal-overlay" onclick="closeModal(event)">
@@ -159,7 +221,7 @@
         <div class="modal-header">
             <div class="modal-title">
                 <h2 id="modal-date">Datum</h2>
-                <span id="tag-focus" class="tag">Focus</span>
+                <span id="tag-focus" class="tag-focus">Focus</span>
             </div>
             <div id="modal-emoji" style="font-size: 2.2em;">😶</div>
         </div>
@@ -179,47 +241,144 @@
                 <ul class="routine-list" id="list-pm"></ul>
             </div>
         </div>
+
+        <div class="diary-section">
+            <div class="diary-title">HOE VOELT JE HUID?</div>
+            <div class="stars" id="stars-container">
+                <span onclick="rate(1)" class="star">★</span>
+                <span onclick="rate(2)" class="star">★</span>
+                <span onclick="rate(3)" class="star">★</span>
+                <span onclick="rate(4)" class="star">★</span>
+                <span onclick="rate(5)" class="star">★</span>
+            </div>
+            
+            <div class="diary-title">TAGS & LOG</div>
+            <div class="tags-container" id="tags-container">
+                </div>
+            
+            <div class="selfie-toggle" id="selfie-btn" onclick="toggleSelfie()">
+                <span>📸</span> <span>Selfie gemaakt?</span>
+            </div>
+        </div>
+
         <button class="btn-close" onclick="closeModalDirect()">Sluiten</button>
     </div>
 </div>
 
+<div id="settings-modal" class="modal-overlay" onclick="closeSettings(event)">
+    <div class="modal-content" onclick="event.stopPropagation()">
+        <h2>Instellingen</h2>
+        <p style="color:#888; font-size:0.9em; margin-bottom:20px;">Maak een back-up om je streak niet te verliezen!</p>
+        
+        <button class="btn-action btn-backup" onclick="exportData()">💾 Data Downloaden (Back-up)</button>
+        <button class="btn-action btn-restore" onclick="document.getElementById('file-input').click()">📂 Data Inladen (Herstel)</button>
+        <input type="file" id="file-input" style="display:none" onchange="importData(this)">
+        
+        <button class="btn-close" onclick="closeSettingsDirect()">Sluiten</button>
+    </div>
+</div>
+
 <script>
+    // --- Config ---
     const routines = {
         "Retinol": { color: "#d63384", bg: "#fff0f6", am: ["Cleanser", "**Copper Peptides**", "Niacinamide", "Moisturizer", "SPF 50"], pm: ["Double Cleanse", "**Retinol 0.2%**", "Moisturizer (wacht 20m)"] },
         "Peptides": { color: "#4a5d54", bg: "#f0fdf4", am: ["Cleanser", "**Copper Peptides**", "Niacinamide", "Moisturizer", "SPF 50"], pm: ["Cleanser", "**Copper Peptides**", "Moisturizer", "Herstel & Hydratatie"] },
         "Mask": { color: "#0d6efd", bg: "#eefbff", am: ["Cleanser", "**Copper Peptides**", "Niacinamide", "Moisturizer", "SPF 50"], pm: ["Cleanser", "**Salicylic Mask** (10m)", "Afspoelen", "Moisturizer"] }
     };
     const weekPattern = ["Peptides", "Retinol", "Peptides", "Mask", "Peptides", "Retinol", "Peptides"];
-    const monthDetails = [{days: 31, start: 4}, {days: 28, start: 0}];
+    const monthNames = ["Januari", "Februari", "Maart", "April", "Mei", "Juni", "Juli", "Augustus", "September", "Oktober", "November", "December"];
+    const availableTags = ["Glow ✨", "Droog 🌵", "Rood 😡", "Puistje 🔴", "Gevoelig 🤕", "Vet 🧈"];
 
+    // --- State ---
     let progressData = JSON.parse(localStorage.getItem('loreSkinData_2026')) || {};
     let currentKey = null;
     let currentMonthIdx = 0;
+    
+    // Wake Lock
+    let wakeLock = null;
+    async function requestWakeLock() {
+        if ('wakeLock' in navigator) {
+            try { wakeLock = await navigator.wakeLock.request('screen'); } catch (err) {}
+        }
+    }
+    document.addEventListener('visibilitychange', async () => { if (wakeLock !== null && document.visibilityState === 'visible') await requestWakeLock(); });
 
+    // --- Init ---
     function init() {
-        renderMonth(0, 'grid-0'); renderMonth(1, 'grid-1'); updateStats();
+        // Dark Mode Check
+        if(localStorage.getItem('theme') === 'dark') document.body.classList.add('dark-mode');
+
+        // Render Tags
+        const tagContainer = document.getElementById('tags-container');
+        availableTags.forEach(tag => {
+            const el = document.createElement('div');
+            el.className = 'tag-chip';
+            el.innerText = tag;
+            el.onclick = () => toggleTag(tag, el);
+            tagContainer.appendChild(el);
+        });
+
+        generateMonthSelector();
         const now = new Date();
-        if(now.getFullYear() === 2026 && now.getMonth() === 1) switchMonth(1);
+        if(now.getFullYear() === 2026) currentMonthIdx = now.getMonth();
+        selectMonth(currentMonthIdx);
+        requestWakeLock();
     }
 
-    function renderMonth(mIdx, gridId) {
-        const grid = document.getElementById(gridId);
+    // --- Dark Mode ---
+    function toggleDarkMode() {
+        document.body.classList.toggle('dark-mode');
+        localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+    }
+
+    // --- Calendar Logic ---
+    function generateMonthSelector() {
+        const container = document.getElementById('month-scroller');
+        monthNames.forEach((name, idx) => {
+            const chip = document.createElement('div');
+            chip.className = 'month-chip';
+            chip.innerText = name;
+            chip.id = `chip-${idx}`;
+            chip.onclick = () => selectMonth(idx);
+            container.appendChild(chip);
+        });
+    }
+
+    function selectMonth(idx) {
+        currentMonthIdx = idx;
+        document.querySelectorAll('.month-chip').forEach(c => c.classList.remove('active'));
+        const activeChip = document.getElementById(`chip-${idx}`);
+        if(activeChip) {
+            activeChip.classList.add('active');
+            activeChip.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        }
+        renderCalendar(idx);
+        updateStats();
+    }
+
+    function renderCalendar(mIdx) {
+        const grid = document.getElementById('main-grid');
         grid.innerHTML = "";
-        const details = monthDetails[mIdx];
+        const daysInMonth = new Date(2026, mIdx + 1, 0).getDate();
+        const startDay = new Date(2026, mIdx, 1).getDay();
         
-        for(let i=0; i<details.start; i++) grid.innerHTML += `<div class="empty-day"></div>`;
+        for(let i=0; i<startDay; i++) grid.innerHTML += `<div class="empty-day"></div>`;
 
         const today = new Date();
         const isCurrentMonth = today.getFullYear() === 2026 && today.getMonth() === mIdx;
 
-        for(let d=1; d<=details.days; d++) {
+        for(let d=1; d<=daysInMonth; d++) {
             const key = `2026-${mIdx}-${d}`;
-            const status = progressData[key] || {am:false, pm:false};
+            const data = progressData[key] || {};
             const type = weekPattern[new Date(2026, mIdx, d).getDay()];
             const isToday = isCurrentMonth && today.getDate() === d;
             
             const card = document.createElement('div');
-            card.className = `day-card ${status.am && status.pm ? 'all-done' : ''} ${isToday ? 'today' : ''}`;
+            // Check if selfie exists (data.selfie is true)
+            const hasSelfie = data.selfie ? 'has-selfie' : '';
+            const allDone = data.am && data.pm ? 'all-done' : '';
+            
+            card.className = `day-card ${allDone} ${isToday ? 'today' : ''} ${hasSelfie}`;
             card.setAttribute('data-type', type);
             card.onclick = () => openModal(mIdx, d, type, key);
             
@@ -228,80 +387,166 @@
                     <div class="day-number">${d}</div>
                     <div class="day-mini-label">${type}</div>
                 </div>
+                <div class="day-icons">
+                    <span class="icon-cam">📸</span>
+                </div>
                 <div class="dots">
-                    <div class="dot ${status.am ? 'done' : ''}"></div>
-                    <div class="dot ${status.pm ? 'done' : ''}"></div>
+                    <div class="dot ${data.am ? 'done' : ''}"></div>
+                    <div class="dot ${data.pm ? 'done' : ''}"></div>
                 </div>
             `;
             grid.appendChild(card);
         }
     }
 
+    // --- Modal Logic ---
     function openModal(m, d, type, key) {
         currentKey = key;
         const r = routines[type];
+        if(!progressData[currentKey]) progressData[currentKey] = {am:false, pm:false, rating:0, tags:[], selfie:false};
+        
         document.getElementById('modal').style.display = 'flex';
-        document.getElementById('modal-date').innerText = `${d} ${m===0?'Januari':'Februari'}`;
+        document.getElementById('modal-date').innerText = `${d} ${monthNames[m]}`;
         
         const tag = document.getElementById('tag-focus');
-        tag.innerText = type; tag.style.backgroundColor = r.bg; tag.style.color = r.color; tag.style.border = `1px solid ${r.color}`;
-
+        tag.innerText = type; 
+        
+        // Routines
         document.getElementById('list-am').innerHTML = r.am.map(s => `<li>${s.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')}</li>`).join('');
         document.getElementById('list-pm').innerHTML = r.pm.map(s => `<li>${s.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')}</li>`).join('');
+        
         updateModalUI();
     }
 
     function updateModalUI() {
-        const status = progressData[currentKey] || {am:false, pm:false};
+        const data = progressData[currentKey];
+        
+        // Checks
         const boxAm = document.getElementById('box-am');
         const boxPm = document.getElementById('box-pm');
-        
-        if(status.am) boxAm.classList.add('completed'); else boxAm.classList.remove('completed');
-        if(status.pm) boxPm.classList.add('completed'); else boxPm.classList.remove('completed');
+        if(data.am) boxAm.classList.add('completed'); else boxAm.classList.remove('completed');
+        if(data.pm) boxPm.classList.add('completed'); else boxPm.classList.remove('completed');
 
+        // Emoji
         const emoji = document.getElementById('modal-emoji');
-        if (status.am && status.pm) emoji.innerText = "✨";
-        else if (status.am || status.pm) emoji.innerText = "🧴";
+        if (data.am && data.pm) emoji.innerText = "✨";
+        else if (data.am || data.pm) emoji.innerText = "🧴";
         else emoji.innerText = "😶";
+
+        // Rating
+        const stars = document.querySelectorAll('.star');
+        stars.forEach((s, idx) => {
+            s.classList.toggle('active', idx < (data.rating || 0));
+        });
+
+        // Tags
+        const tagChips = document.querySelectorAll('.tag-chip');
+        tagChips.forEach(chip => {
+            const tagName = chip.innerText;
+            chip.classList.toggle('selected', (data.tags || []).includes(tagName));
+        });
+
+        // Selfie
+        const selfieBtn = document.getElementById('selfie-btn');
+        selfieBtn.classList.toggle('active', !!data.selfie);
     }
 
     function toggleTask(period) {
-        if(!progressData[currentKey]) progressData[currentKey] = {am:false, pm:false};
-        const wasDone = progressData[currentKey].am && progressData[currentKey].pm;
-        progressData[currentKey][period] = !progressData[currentKey][period];
-        
-        localStorage.setItem('loreSkinData_2026', JSON.stringify(progressData));
-        const isDone = progressData[currentKey].am && progressData[currentKey].pm;
-        
-        updateModalUI(); renderMonth(0, 'grid-0'); renderMonth(1, 'grid-1'); updateStats();
-        if(isDone && !wasDone) confetti({ particleCount: 150, spread: 60, origin: { y: 0.7 }, colors: ['#d05e5e', '#ffb703', '#8da399'] });
+        const data = progressData[currentKey];
+        const wasDone = data.am && data.pm;
+        data[period] = !data[period];
+        saveAndRender();
+        if(data.am && data.pm && !wasDone) confetti({ particleCount: 150, spread: 60, origin: { y: 0.7 }, colors: ['#d05e5e', '#ffb703', '#8da399'] });
     }
 
+    // --- Diary Functions ---
+    function rate(n) {
+        progressData[currentKey].rating = n;
+        saveAndRender();
+    }
+
+    function toggleTag(tag, el) {
+        const data = progressData[currentKey];
+        if(!data.tags) data.tags = [];
+        
+        if(data.tags.includes(tag)) {
+            data.tags = data.tags.filter(t => t !== tag);
+        } else {
+            data.tags.push(tag);
+        }
+        saveAndRender();
+    }
+
+    function toggleSelfie() {
+        const data = progressData[currentKey];
+        data.selfie = !data.selfie;
+        saveAndRender();
+    }
+
+    function saveAndRender() {
+        localStorage.setItem('loreSkinData_2026', JSON.stringify(progressData));
+        updateModalUI();
+        renderCalendar(currentMonthIdx);
+        updateStats();
+    }
+
+    // --- Stats ---
     function updateStats() {
-        const details = monthDetails[currentMonthIdx];
-        let totalChecks = details.days * 2; let doneChecks = 0;
-        for(let d=1; d<=details.days; d++) {
+        const daysInMonth = new Date(2026, currentMonthIdx + 1, 0).getDate();
+        let totalChecks = daysInMonth * 2; 
+        let doneChecks = 0;
+        
+        for(let d=1; d<=daysInMonth; d++) {
             const k = `2026-${currentMonthIdx}-${d}`;
             if(progressData[k]) { if(progressData[k].am) doneChecks++; if(progressData[k].pm) doneChecks++; }
         }
+        
         const percentage = Math.round((doneChecks / totalChecks) * 100);
         document.getElementById('progress-bar').style.width = `${percentage}%`;
-        document.getElementById('progress-text').innerText = `${percentage}% van ${currentMonthIdx===0?'Januari':'Februari'}`;
+        document.getElementById('progress-text').innerText = `${percentage}% van ${monthNames[currentMonthIdx]}`;
 
-        let activeDays = 0; Object.values(progressData).forEach(day => { if(day.am || day.pm) activeDays++; });
+        let activeDays = 0; 
+        Object.values(progressData).forEach(day => { if(day.am || day.pm) activeDays++; });
         document.getElementById('streak-count').innerText = activeDays;
     }
 
-    function switchMonth(idx) {
-        currentMonthIdx = idx;
-        document.querySelectorAll('.tab-btn').forEach((b, i) => b.classList.toggle('active', i===idx));
-        document.getElementById('calendar-jan').classList.toggle('active', idx===0);
-        document.getElementById('calendar-feb').classList.toggle('active', idx===1);
-        updateStats();
+    // --- Import / Export ---
+    function openSettings() { document.getElementById('settings-modal').style.display = 'flex'; }
+    function closeSettings(e) { if(e.target.id === 'settings-modal') closeSettingsDirect(); }
+    function closeSettingsDirect() { document.getElementById('settings-modal').style.display = 'none'; }
+
+    function exportData() {
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(progressData));
+        const downloadAnchorNode = document.createElement('a');
+        downloadAnchorNode.setAttribute("href", dataStr);
+        downloadAnchorNode.setAttribute("download", "lore_skin_backup.json");
+        document.body.appendChild(downloadAnchorNode);
+        downloadAnchorNode.click();
+        downloadAnchorNode.remove();
+    }
+
+    function importData(input) {
+        const file = input.files[0];
+        if(!file) return;
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            try {
+                const data = JSON.parse(e.target.result);
+                localStorage.setItem('loreSkinData_2026', JSON.stringify(data));
+                progressData = data;
+                alert("Back-up succesvol ingeladen!");
+                closeSettingsDirect();
+                selectMonth(currentMonthIdx); // Refresh
+            } catch(err) {
+                alert("Fout bij inladen bestand.");
+            }
+        };
+        reader.readAsText(file);
     }
 
     function closeModal(e) { if(e.target.id === 'modal') closeModalDirect(); }
     function closeModalDirect() { document.getElementById('modal').style.display = 'none'; }
+    
     init();
 </script>
 </body>
