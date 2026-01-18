@@ -19,17 +19,24 @@
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         
         :root {
-            --bg-color: #fff8fa;
+            --bg-color: #fcfdfc; /* Iets koeler wit */
             --card-bg: #ffffff;
             --text: #4a4a4a;
             --text-muted: #888;
-            --terracotta: #d05e5e;
-            --gold: #ffb703;
-            --success: #27ae60;
+            
+            /* Nieuw Kleurenpalet */
+            --terracotta: #d05e5e; /* Accent kleur */
+            --gold: #e0c097;       /* Zachter goud */
+            
+            --sage-green: #8da399;       /* Hoofdkleur groen */
+            --sage-dark: #6b8279;        /* Voor tekst/actieve knoppen */
+            --sage-light: #f1f8f5;       /* Voor achtergronden */
+            --success: var(--sage-green);
+
             --danger: #e74c3c;
             --border-color: #eee;
             --modal-bg: #ffffff;
-            --chip-bg: #f3f3f3;
+            --chip-bg: #f5f7f6;
             --shadow: rgba(0,0,0,0.05);
 
             --retinol-border: #f783ac;
@@ -43,6 +50,11 @@
             --text: #e4e4e7;
             --text-muted: #a1a1aa;
             --terracotta: #e07a7a;
+            
+            --sage-green: #a3b8b0;
+            --sage-dark: #8da399;
+            --sage-light: #2c3834;
+
             --border-color: #3f3f46;
             --modal-bg: #27272a;
             --chip-bg: #3f3f46;
@@ -58,6 +70,7 @@
             overflow-x: hidden;
             user-select: none;
             min-height: 100vh;
+            transition: background 0.3s;
         }
 
         .container { max-width: 500px; margin: 0 auto; width: 100%; }
@@ -65,23 +78,25 @@
         /* Top Nav */
         .top-nav { display: flex; justify-content: space-between; margin-bottom: 10px; }
         .icon-btn { background: none; border: none; font-size: 1.5em; cursor: pointer; color: var(--text); padding: 5px; }
-        .gallery-btn { font-size: 0.9em; background: var(--terracotta); color: white; padding: 5px 15px; border-radius: 15px; border:none; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 5px; box-shadow: 0 2px 5px var(--shadow); }
+        .gallery-btn { font-size: 0.9em; background: var(--sage-dark); color: white; padding: 5px 15px; border-radius: 15px; border:none; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 5px; box-shadow: 0 2px 5px var(--shadow); transition: 0.2s; }
+        .gallery-btn:active { transform: scale(0.98); }
 
         header { text-align: center; margin-bottom: 20px; }
         h1 { font-weight: 700; margin: 0 0 10px 0; font-size: 1.8em; line-height: 1.2; }
         .name-highlight { color: var(--terracotta); font-family: 'Georgia', serif; font-style: italic; }
 
         .stats-row { display: flex; justify-content: space-between; align-items: center; font-size: 0.8em; color: var(--text-muted); margin-bottom: 10px; padding: 0 5px; }
-        .streak-badge { background: var(--card-bg); padding: 4px 10px; border-radius: 12px; box-shadow: 0 2px 5px var(--shadow); font-weight: bold; color: var(--terracotta); }
+        .streak-badge { background: var(--card-bg); padding: 4px 10px; border-radius: 12px; box-shadow: 0 2px 5px var(--shadow); font-weight: bold; color: var(--sage-dark); }
 
+        /* Groene Progress Bar */
         .progress-container { background: var(--chip-bg); border-radius: 20px; height: 8px; width: 100%; overflow: hidden; margin-bottom: 20px; }
-        .progress-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--terracotta), var(--gold)); transition: width 0.6s ease; }
+        .progress-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--sage-green), var(--sage-dark)); transition: width 0.6s ease; }
 
-        /* Month Scroller */
+        /* Month Scroller (Groen Actief) */
         .month-scroller { display: flex; overflow-x: auto; gap: 10px; padding: 5px 5px 15px 5px; margin-bottom: 10px; scrollbar-width: none; }
         .month-scroller::-webkit-scrollbar { display: none; }
         .month-chip { flex: 0 0 auto; padding: 8px 18px; border-radius: 20px; background: var(--card-bg); color: var(--text-muted); font-weight: 600; font-size: 0.9em; cursor: pointer; box-shadow: 0 2px 5px var(--shadow); transition: 0.2s; border: 1px solid transparent; }
-        .month-chip.active { background: var(--terracotta); color: white; box-shadow: 0 4px 10px rgba(208, 94, 94, 0.4); transform: scale(1.05); }
+        .month-chip.active { background: var(--sage-dark); color: white; box-shadow: 0 4px 10px rgba(141, 163, 153, 0.4); transform: scale(1.05); }
 
         /* Calendar Grid */
         .weekdays { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; font-weight: bold; color: var(--text-muted); margin-bottom: 8px; font-size: 0.75em; text-transform: uppercase; }
@@ -101,11 +116,10 @@
         .day-card[data-type="Retinol"] { border-bottom: 3px solid var(--retinol-border); }
         .day-card[data-type="Peptides"] { border-bottom: 3px solid var(--peptide-border); }
         .day-card[data-type="Mask"] { border-bottom: 3px solid var(--mask-border); }
-        .day-card.today { border-color: var(--gold) !important; background: rgba(255, 183, 3, 0.1); }
+        .day-card.today { border-color: var(--gold) !important; background: rgba(224, 192, 151, 0.15); }
         
         /* Subtle indicator for photo (Background tint) */
-        .day-card.has-selfie { background-color: #e3f2fd; } /* Zacht blauw tintje */
-        body.dark-mode .day-card.has-selfie { background-color: #1e3a8a; }
+        .day-card.has-selfie { background-color: var(--sage-light); }
 
         .day-content { display: flex; flex-direction: column; align-items: center; justify-content: center; flex-grow: 1; width: 100%; }
         .day-number { font-weight: 700; font-size: 1.1em; line-height: 1; margin-bottom: 3px; }
@@ -123,17 +137,17 @@
         /* Gallery Modal Styles */
         #gallery-modal .modal-content { height: 90vh; display: flex; flex-direction: column; padding: 20px; }
         
-        /* Filter Bar */
+        /* Filter Bar (Groen Actief) */
         .filter-bar { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid var(--border-color); scrollbar-width: none; flex-shrink: 0; }
         .filter-bar::-webkit-scrollbar { display: none; }
-        .filter-chip { padding: 6px 12px; border-radius: 15px; background: var(--chip-bg); font-size: 0.85em; white-space: nowrap; color: var(--text-muted); cursor: pointer; border: 1px solid transparent; }
-        .filter-chip.active { background: var(--terracotta); color: white; }
+        .filter-chip { padding: 6px 12px; border-radius: 15px; background: var(--chip-bg); font-size: 0.85em; white-space: nowrap; color: var(--text-muted); cursor: pointer; border: 1px solid transparent; transition: 0.2s; }
+        .filter-chip.active { background: var(--sage-dark); color: white; }
 
         .gallery-grid { display: flex; flex-direction: column; gap: 15px; overflow-y: auto; flex-grow: 1; padding-bottom: 20px; }
         .gallery-item { display: flex; gap: 15px; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 15px; position: relative; }
         .gallery-img { width: 90px; height: 90px; object-fit: cover; border-radius: 12px; border: 2px solid var(--border-color); background: #eee; cursor: zoom-in; flex-shrink: 0; }
         .gallery-info { flex-grow: 1; }
-        .gallery-info h4 { margin: 0 0 5px 0; color: var(--terracotta); font-size: 1em; }
+        .gallery-info h4 { margin: 0 0 5px 0; color: var(--sage-dark); font-size: 1em; }
         .gallery-tags { display: flex; flex-wrap: wrap; gap: 4px; }
         .mini-tag { font-size: 0.75em; background: var(--chip-bg); padding: 2px 8px; border-radius: 4px; color: var(--text-muted); }
         
@@ -147,9 +161,9 @@
         #lightbox img { max-width: 100%; max-height: 100%; object-fit: contain; }
         #lightbox-close { position: absolute; top: 20px; right: 20px; color: white; font-size: 2em; cursor: pointer; background: rgba(0,0,0,0.5); width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 50%; }
 
-        /* Routine & Camera Button */
+        /* Routine & Camera Button (Groen Completed) */
         .routine-box { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; padding: 15px; margin-bottom: 12px; cursor: pointer; display: flex; align-items: flex-start; transition: 0.2s; box-shadow: 0 4px 10px var(--shadow); }
-        .routine-box.completed { background: rgba(39, 174, 96, 0.1); border-color: var(--success); }
+        .routine-box.completed { background: var(--sage-light); border-color: var(--success); }
         .check-circle { min-width: 26px; height: 26px; border-radius: 50%; border: 2px solid #ddd; margin-right: 15px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 14px; }
         .routine-box.completed .check-circle { background: var(--success); border-color: var(--success); }
         .routine-box.completed .check-circle::after { content: "✓"; }
@@ -161,22 +175,20 @@
             display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%;
             padding: 12px; background: var(--chip-bg); border-radius: 12px; cursor: pointer;
             margin-top: 15px; font-weight: bold; color: var(--text); border: 2px dashed var(--border-color);
+            transition: 0.2s;
         }
-        .btn-camera.has-photo { border-color: var(--success); background: rgba(39, 174, 96, 0.1); color: var(--success); }
+        .btn-camera.has-photo { border-color: var(--success); background: var(--sage-light); color: var(--success); }
         
-        /* Modal Extras */
+        /* Modal Extras (Tags Groen) */
         .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
         .modal-title h2 { margin: 0; font-size: 1.4em; color: var(--text); }
         .diary-section { margin-top: 20px; padding-top: 15px; border-top: 1px solid var(--border-color); }
         .diary-title { font-size: 0.9em; font-weight: bold; margin-bottom: 10px; color: var(--text-muted); }
-        .stars { display: flex; gap: 8px; margin-bottom: 15px; }
-        .star { font-size: 1.8em; cursor: pointer; color: var(--border-color); transition: 0.2s; }
-        .star.active { color: var(--gold); }
         .tags-container { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 15px; }
-        .tag-chip { padding: 6px 12px; border-radius: 15px; background: var(--chip-bg); color: var(--text-muted); font-size: 0.85em; cursor: pointer; border: 1px solid transparent; }
-        .tag-chip.selected { background: var(--terracotta); color: white; }
+        .tag-chip { padding: 6px 12px; border-radius: 15px; background: var(--chip-bg); color: var(--text-muted); font-size: 0.85em; cursor: pointer; border: 1px solid transparent; transition: 0.2s; }
+        .tag-chip.selected { background: var(--sage-dark); color: white; }
         
-        .btn-close { width: 100%; padding: 14px; background: var(--chip-bg); border: none; border-radius: 12px; font-weight: bold; color: var(--text); margin-top: 10px; font-size: 1em; }
+        .btn-close { width: 100%; padding: 14px; background: var(--chip-bg); border: none; border-radius: 12px; font-weight: bold; color: var(--text); margin-top: 10px; font-size: 1em; cursor: pointer; }
 
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
@@ -251,13 +263,12 @@
 
 <div id="gallery-modal" class="modal-overlay" onclick="closeGalleryDirect(event)">
     <div class="modal-content" onclick="event.stopPropagation()">
-        <div style="display:flex; justify-content:space-between; align-items:center;">
-            <h2>📸 Mijn Tijdlijn</h2>
-            <span style="font-size:1.2em; cursor:pointer;" onclick="closeGalleryDirect()">✖</span>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 15px;">
+            <h2 style="margin:0">📸 Mijn Tijdlijn</h2>
+            <span style="font-size:1.5em; cursor:pointer; color:var(--text-muted);" onclick="closeGalleryDirect()">×</span>
         </div>
         
         <div class="filter-bar" id="gallery-filters">
-            <div class="filter-chip active" onclick="filterGallery('all', this)">Alles</div>
             </div>
 
         <div class="gallery-grid" id="gallery-grid"></div>
@@ -273,7 +284,7 @@
     <div class="modal-content" onclick="event.stopPropagation()">
         <h2>Instellingen</h2>
         <p style="color:#888;">Backup je vinkjes. Let op: Foto's zitten NIET in de backup (browser opslag).</p>
-        <button class="btn-close" style="background:var(--terracotta); color:white;" onclick="exportData()">💾 Vinkjes Downloaden</button>
+        <button class="btn-close" style="background:var(--sage-dark); color:white;" onclick="exportData()">💾 Vinkjes Downloaden</button>
         <button class="btn-close" onclick="document.getElementById('file-input').click()">📂 Vinkjes Inladen</button>
         <input type="file" id="file-input" style="display:none" onchange="importData(this)">
         <button class="btn-close" onclick="closeSettingsDirect()">Sluiten</button>
@@ -309,8 +320,9 @@
     function init() {
         if(localStorage.getItem('theme') === 'dark') document.body.classList.add('dark-mode');
         
-        // Tags renderen in Modal
+        // Tags renderen in Modal (EERST LEEGMAKEN!)
         const tagContainer = document.getElementById('tags-container');
+        tagContainer.innerHTML = '';
         availableTags.forEach(tag => {
             const el = document.createElement('div');
             el.className = 'tag-chip';
@@ -319,8 +331,9 @@
             tagContainer.appendChild(el);
         });
 
-        // Filters renderen in Gallery
+        // Filters renderen in Gallery (EERST LEEGMAKEN & ALLES TOEVOEGEN)
         const filterBar = document.getElementById('gallery-filters');
+        filterBar.innerHTML = '<div class="filter-chip active" onclick="filterGallery(\'all\', this)">Alles</div>';
         availableTags.forEach(tag => {
             const el = document.createElement('div');
             el.className = 'filter-chip';
@@ -364,7 +377,6 @@
 
     function filterGallery(tag, el) {
         currentFilter = tag;
-        // Update active class
         document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
         if(el) el.classList.add('active');
         renderGalleryItems();
@@ -372,7 +384,7 @@
 
     function renderGalleryItems() {
         const grid = document.getElementById('gallery-grid');
-        grid.innerHTML = "<div style='text-align:center'>Laden...</div>";
+        grid.innerHTML = "<div style='text-align:center; color:#888;'>Laden...</div>";
         
         const tx = db.transaction(["photos"], "readonly");
         const req = tx.objectStore("photos").getAll();
@@ -380,20 +392,14 @@
         req.onsuccess = function() {
             let photos = req.result;
             grid.innerHTML = "";
-            
-            // Sorteer nieuwste eerst
             photos.sort((a, b) => b.timestamp - a.timestamp);
 
             let visibleCount = 0;
-
             photos.forEach(photo => {
                 const dayData = progressData[photo.dateKey] || {};
                 const tags = dayData.tags || [];
 
-                // Filter Logic
-                if (currentFilter !== 'all' && !tags.includes(currentFilter)) {
-                    return; // Skip this photo
-                }
+                if (currentFilter !== 'all' && !tags.includes(currentFilter)) return;
 
                 visibleCount++;
                 const parts = photo.dateKey.split('-'); 
@@ -416,26 +422,21 @@
                 grid.appendChild(div);
             });
 
-            if(visibleCount === 0) {
-                grid.innerHTML = "<div class='no-photos'>Geen foto's gevonden met dit filter.</div>";
-            }
+            if(visibleCount === 0) grid.innerHTML = "<div class='no-photos'>Geen foto's gevonden.</div>";
         };
     }
 
     function deletePhoto(key) {
         if(!confirm("Ben je zeker dat je deze foto wil verwijderen?")) return;
-        
         const tx = db.transaction(["photos"], "readwrite");
         tx.objectStore("photos").delete(key);
-        
         tx.oncomplete = function() {
-            // Update localStorage state
             if(progressData[key]) {
                 progressData[key].hasPhoto = false;
                 localStorage.setItem('loreSkinData_2026', JSON.stringify(progressData));
             }
-            renderGalleryItems(); // Refresh Gallery list
-            renderCalendar(currentMonthIdx); // Refresh Calendar markers
+            renderGalleryItems(); 
+            renderCalendar(currentMonthIdx);
         };
     }
 
@@ -570,7 +571,7 @@
         localStorage.setItem('loreSkinData_2026', JSON.stringify(progressData));
         updateModalUI(); renderCalendar(currentMonthIdx); updateStats();
         
-        if(data.am && data.pm && !wasDone) confetti({ particleCount: 150, spread: 60, origin: { y: 0.7 }, colors: ['#d05e5e', '#ffb703', '#8da399'] });
+        if(data.am && data.pm && !wasDone) confetti({ particleCount: 150, spread: 60, origin: { y: 0.7 }, colors: ['#d05e5e', '#e0c097', '#8da399'] });
     }
 
     function updateStats() {
@@ -611,7 +612,7 @@
         }; reader.readAsText(file);
     }
     
-    init(); // Start!
+    init();
 </script>
 </body>
 </html>
