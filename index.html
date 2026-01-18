@@ -102,19 +102,19 @@
         .month-chip { flex: 0 0 auto; padding: 8px 16px; border-radius: 18px; background: var(--card-bg); color: var(--text-muted); font-weight: 600; font-size: 0.9em; cursor: pointer; box-shadow: 0 2px 4px var(--shadow); transition: 0.2s; border: 1px solid var(--border-color); }
         .month-chip.active { background: var(--terracotta); color: white; border-color: var(--terracotta); box-shadow: 0 4px 12px rgba(204, 132, 104, 0.4); transform: translateY(-1px); }
 
-        /* --- NIEUWE FLEXIBELE KALENDER GRID --- */
+        /* --- FLEXIBELE KALENDER GRID --- */
         .calendar-grid { 
             display: grid; 
-            /* DIT IS DE MAGIE: Vul de rij zover mogelijk, met kaartjes van min 75px breed */
             grid-template-columns: repeat(auto-fill, minmax(75px, 1fr)); 
-            gap: 10px; 
+            gap: 8px; /* Iets meer ruimte tussen de compactere kaartjes */
             width: 100%;
         }
 
         .day-card {
             background: var(--card-bg); 
-            border-radius: 15px; 
-            aspect-ratio: 1 / 1.3; 
+            border-radius: 12px; 
+            /* AANGEPAST: Minder hoog (was 1/1.3) */
+            aspect-ratio: 1 / 1.1; 
             position: relative;
             cursor: pointer; 
             border: 1px solid var(--border-color);
@@ -124,8 +124,8 @@
         }
         .day-card:active { transform: scale(0.96); }
 
-        .card-date { position: absolute; top: 8px; left: 8px; font-weight: 700; font-size: 1.1em; color: var(--text); }
-        .card-dayname { position: absolute; top: 10px; right: 8px; font-size: 0.55em; font-weight: 700; color: var(--text-muted); text-transform: uppercase; }
+        .card-date { position: absolute; top: 6px; left: 8px; font-weight: 700; font-size: 1.1em; color: var(--text); }
+        .card-dayname { position: absolute; top: 8px; right: 8px; font-size: 0.55em; font-weight: 700; color: var(--text-muted); text-transform: uppercase; }
         
         .card-focus {
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
@@ -137,7 +137,7 @@
             padding: 0 2px;
         }
 
-        .card-dots { position: absolute; bottom: 8px; left: 0; right: 0; display: flex; justify-content: center; gap: 4px; }
+        .card-dots { position: absolute; bottom: 6px; left: 0; right: 0; display: flex; justify-content: center; gap: 4px; }
         .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--chip-bg); }
         .dot.done { background: var(--sage-green); }
 
@@ -293,7 +293,7 @@
 <script>
     const routines = {
         "Retinol": { am: ["Cleanser", "**Copper Peptides**", "Niacinamide", "Moisturizer", "SPF 50"], pm: ["Double Cleanse", "**Retinol 0.2%**", "Moisturizer (wacht 20m)"] },
-        "Peptides": { am: ["Cleanser", "**Copper Peptides**", "Niacinamide", "Moisturizer", "SPF 50"], pm: ["Cleanser", "**Copper Peptides**", "Moisturizer", "Herstel & Hydratatie"] },
+        "Peptides": { am: ["Cleanser", "**Copper Peptides**", "Niacinamide", "Moisturizer", "SPF 50"], pm: ["Cleanser", "**Copper Peptides**", "Moisturizer"] },
         "Mask": { am: ["Cleanser", "**Copper Peptides**", "Niacinamide", "Moisturizer", "SPF 50"], pm: ["Cleanser", "**Salicylic Mask** (10m)", "Afspoelen", "Moisturizer"] }
     };
     const weekPattern = ["Peptides", "Retinol", "Peptides", "Mask", "Peptides", "Retinol", "Peptides"];
@@ -465,9 +465,6 @@
         const grid = document.getElementById('main-grid');
         grid.innerHTML = "";
         const daysInMonth = new Date(2026, mIdx + 1, 0).getDate();
-        
-        // GEEN lege vakjes meer aan het begin! We loopen gewoon direct de dagen.
-        
         const today = new Date();
         const isCurrentMonth = today.getFullYear() === 2026 && today.getMonth() === mIdx;
 
