@@ -3,214 +3,353 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mijn Skin Care Journey</title>
+    <title>Skin Care Tracker Pro</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
         :root {
-            --soft-pink: #fce4ec;
-            --deep-pink: #f06292;
-            --terracotta: #cc7a67;
-            --sage-green: #8da399;
-            --dark-green: #4a5d54;
-            --white: #ffffff;
+            --bg-color: #fff0f5;
+            --card-bg: #ffffff;
+            --primary: #d05e5e;
+            --accent: #5c7c68;
+            --gold: #ffb703;
+            --text: #4a4a4a;
+            --success: #8da399;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--soft-pink);
-            color: var(--dark-green);
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text);
             margin: 0;
             padding: 20px;
-            line-height: 1.6;
+            padding-bottom: 80px; /* Ruimte voor scroll */
         }
 
-        header {
-            text-align: center;
-            padding: 40px 20px;
-            background-color: var(--terracotta);
+        .container { max-width: 600px; margin: 0 auto; }
+
+        /* Progress Bar */
+        .progress-container {
+            background: #e0e0e0;
+            border-radius: 20px;
+            height: 10px;
+            width: 100%;
+            margin: 10px 0 20px 0;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--gold));
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        .stats-text { text-align: center; font-size: 0.85em; color: #777; margin-bottom: 20px;}
+
+        /* Header & Tabs */
+        header { text-align: center; }
+        .tabs { display: flex; justify-content: center; gap: 15px; margin: 20px 0; }
+        .tab-btn {
+            padding: 8px 20px;
+            border: 2px solid transparent;
+            border-radius: 20px;
+            background: rgba(255,255,255,0.6);
+            cursor: pointer;
+            font-weight: 600;
+            color: #888;
+            transition: 0.3s;
+        }
+        .tab-btn.active {
+            background: var(--primary);
             color: white;
-            border-radius: 15px;
-            margin-bottom: 30px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 10px rgba(208, 94, 94, 0.3);
         }
 
-        h1 { margin: 0; font-size: 2.5em; }
-        h2 { color: var(--terracotta); border-bottom: 2px solid var(--sage-green); padding-bottom: 10px; }
+        /* Calendar Grid */
+        .calendar-wrapper { display: none; }
+        .calendar-wrapper.active { display: block; animation: fadeIn 0.4s; }
 
-        .container { max-width: 1000px; margin: auto; }
-
-        /* Kalender Styling */
-        .calendar-grid {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 10px;
-            margin-bottom: 40px;
+        .weekdays {
+            display: grid; grid-template-columns: repeat(7, 1fr);
+            text-align: center; font-weight: bold; color: var(--accent);
+            margin-bottom: 10px; font-size: 0.8em; text-transform: uppercase;
         }
+
+        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; }
 
         .day-card {
-            background: white;
-            border: 2px solid var(--sage-green);
-            border-radius: 8px;
-            padding: 10px;
-            text-align: center;
+            background: var(--card-bg);
+            border-radius: 10px;
+            aspect-ratio: 1 / 1.1;
+            padding: 4px;
+            display: flex; flex-direction: column; justify-content: space-between;
             cursor: pointer;
-            transition: transform 0.2s, background 0.3s;
             position: relative;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            border: 2px solid transparent;
+            transition: transform 0.2s;
         }
 
-        .day-card:hover { transform: translateY(-3px); border-color: var(--terracotta); }
-        .day-card.completed { background-color: var(--sage-green); color: white; }
-        .day-card.completed::after { content: " ✓"; font-weight: bold; }
-
-        /* Modal / Uitleg Sectie */
-        #detail-view {
-            display: none;
-            background: white;
-            padding: 30px;
-            border-radius: 15px;
-            border-left: 10px solid var(--terracotta);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            margin-top: 20px;
-            position: sticky;
-            bottom: 20px;
+        .day-card:active { transform: scale(0.95); }
+        .day-card.all-done { background-color: #f0fdf4; border-color: var(--success); }
+        
+        /* Highlight VANDAAG */
+        .day-card.today {
+            border-color: var(--gold);
+            box-shadow: 0 0 10px rgba(255, 183, 3, 0.4);
         }
-
-        .btn-check {
-            background-color: var(--terracotta);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 20px;
-            cursor: pointer;
-            margin-top: 15px;
+        .day-card.today::after {
+            content: "NU";
+            position: absolute; top: -8px; right: -5px;
+            background: var(--gold); color: white;
+            font-size: 0.6em; padding: 2px 5px; border-radius: 10px;
             font-weight: bold;
         }
 
-        .btn-check:hover { background-color: var(--dark-green); }
+        .day-number { font-weight: 700; font-size: 1.1em; text-align: center; margin-top: 5px; }
+        .day-type { font-size: 0.55em; text-align: center; color: #999; text-transform: uppercase; }
 
-        .routine-block {
-            background: var(--soft-pink);
-            padding: 15px;
-            border-radius: 10px;
-            margin: 10px 0;
-        }
+        .dots { display: flex; justify-content: center; gap: 3px; margin-bottom: 6px; }
+        .dot { width: 6px; height: 6px; border-radius: 50%; background: #eee; }
+        .dot.done { background: var(--success); }
 
-        .tag {
-            display: inline-block;
-            padding: 3px 10px;
-            border-radius: 12px;
-            font-size: 0.8em;
-            margin-bottom: 5px;
-            background: var(--terracotta);
-            color: white;
-        }
+        .empty-day { visibility: hidden; }
 
-        @media (max-width: 768px) {
-            .calendar-grid { grid-template-columns: repeat(4, 1fr); }
+        /* Modal */
+        .modal-overlay {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.6);
+            display: none; align-items: center; justify-content: center;
+            backdrop-filter: blur(4px); z-index: 999;
         }
+        .modal-content {
+            background: white; width: 90%; max-width: 400px;
+            padding: 25px; border-radius: 20px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+            animation: slideUp 0.3s;
+        }
+        
+        .routine-item {
+            background: #f8f9fa; border: 1px solid #eee;
+            padding: 15px; border-radius: 12px; margin-bottom: 10px;
+            display: flex; align-items: center; cursor: pointer;
+            transition: 0.2s;
+        }
+        .routine-item:hover { border-color: var(--primary); background: #fffbfb; }
+        .routine-item.completed { background: #effcf6; border-color: var(--success); opacity: 0.8; }
+        
+        .check-circle {
+            width: 24px; height: 24px; border-radius: 50%;
+            border: 2px solid #ddd; margin-right: 15px;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: bold; color: white; flex-shrink: 0;
+        }
+        .routine-item.completed .check-circle { background: var(--success); border-color: var(--success); }
+        .routine-item.completed .check-circle::before { content: "✓"; }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
     </style>
 </head>
 <body>
 
 <div class="container">
     <header>
-        <h1>Mijn Skin Care Journey</h1>
-        <p>Januari & Februari 2026 • Consistentie is de sleutel</p>
+        <h1>✨ Skin Journey</h1>
+        
+        <div class="progress-container">
+            <div class="progress-fill" id="progress-bar"></div>
+        </div>
+        <div class="stats-text" id="stats-text">0% voltooid deze maand</div>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchMonth(0)">Januari</button>
+            <button class="tab-btn" onclick="switchMonth(1)">Februari</button>
+        </div>
     </header>
 
-    <section>
-        <h2>Januari 2026</h2>
-        <div class="calendar-grid" id="jan-grid"></div>
+    <div class="weekdays">
+        <div>Zo</div><div>Ma</div><div>Di</div><div>Wo</div><div>Do</div><div>Vr</div><div>Za</div>
+    </div>
 
-        <h2>Februari 2026</h2>
-        <div class="calendar-grid" id="feb-grid"></div>
-    </section>
+    <div id="calendar-jan" class="calendar-wrapper active"><div class="calendar-grid" id="grid-0"></div></div>
+    <div id="calendar-feb" class="calendar-wrapper"><div class="calendar-grid" id="grid-1"></div></div>
+</div>
 
-    <div id="detail-view">
-        <h3 id="detail-date">Selecteer een dag</h3>
-        <div id="detail-content"></div>
-        <button class="btn-check" onclick="markComplete()">Dag Voltooid! ✓</button>
-        <button class="btn-check" style="background: grey;" onclick="closeDetail()">Sluiten</button>
+<div id="modal" class="modal-overlay" onclick="closeModal(event)">
+    <div class="modal-content" onclick="event.stopPropagation()">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+            <h2 id="modal-title" style="margin:0; color:var(--primary);">Datum</h2>
+            <div id="modal-emoji" style="font-size:2em;">😶</div>
+        </div>
+        <p id="modal-subtitle" style="color:#888; margin-top:5px; font-style:italic;"></p>
+        <hr style="border:0; border-top:1px solid #eee; margin: 20px 0;">
+
+        <div class="routine-item" id="btn-am" onclick="toggleTask('am')">
+            <div class="check-circle"></div>
+            <div>
+                <strong style="display:block; color:#555;">☀️ Ochtend</strong>
+                <span id="desc-am" style="font-size:0.85em; color:#888;">Laden...</span>
+            </div>
+        </div>
+
+        <div class="routine-item" id="btn-pm" onclick="toggleTask('pm')">
+            <div class="check-circle"></div>
+            <div>
+                <strong style="display:block; color:#555;">🌙 Avond</strong>
+                <span id="desc-pm" style="font-size:0.85em; color:#888;">Laden...</span>
+            </div>
+        </div>
+        
+        <button onclick="closeModalDirect()" style="width:100%; padding:12px; margin-top:15px; background:var(--text); color:white; border:none; border-radius:10px; cursor:pointer;">Sluiten</button>
     </div>
 </div>
 
 <script>
+    // Config
     const routines = {
-        "Retinol": {
-            am: "Cleanser -> Copper Peptides -> Niacinamide -> Moisturizer -> SPF",
-            pm: "Cleanser -> **Retinol 0.2%** -> Moisturizer",
-            note: "Let op: Breng Retinol aan op een kurkdroge huid!"
-        },
-        "Peptides": {
-            am: "Cleanser -> Copper Peptides -> Niacinamide -> Moisturizer -> SPF",
-            pm: "Cleanser -> **Copper Peptides** -> Moisturizer",
-            note: "Rustavond voor de huid, focus op herstel en collageen."
-        },
-        "Mask": {
-            am: "Cleanser -> Copper Peptides -> Niacinamide -> Moisturizer -> SPF",
-            pm: "Cleanser -> **Salicylic Acid Mask (10 min)** -> Afspoelen -> Moisturizer",
-            note: "Geen andere actieve serums gebruiken vanavond!"
-        }
+        "Retinol": { am: "Vit C + SPF", pm: "Retinol 0.2% + Moisturizer" },
+        "Peptides": { am: "Peptides + SPF", pm: "Copper Peptides + Repair" },
+        "Mask": { am: "Hydration + SPF", pm: "Salicylic Mask (10m)" }
     };
+    const weekPattern = ["Peptides", "Retinol", "Peptides", "Mask", "Peptides", "Retinol", "Peptides"];
+    const monthDetails = [{days: 31, start: 4}, {days: 28, start: 0}]; // Jan (do), Feb (zo)
 
-    // Schema mapping per dag van de week
-    const weekMap = ["Peptides", "Retinol", "Peptides", "Mask", "Peptides", "Retinol", "Peptides"]; 
+    let progressData = JSON.parse(localStorage.getItem('skinCarePro_2026')) || {};
+    let currentKey = null;
+    let currentMonthIdx = 0; // Standaard Januari
 
-    let selectedDayId = null;
+    // Init
+    function init() {
+        renderMonth(0, 'grid-0');
+        renderMonth(1, 'grid-1');
+        updateProgress();
+        
+        // Auto-switch naar huidige maand indien nodig (simpel)
+        const now = new Date();
+        if(now.getFullYear() === 2026 && now.getMonth() === 1) switchMonth(1);
+    }
 
-    function generateCalendar(month, days, gridId) {
+    function renderMonth(mIdx, gridId) {
         const grid = document.getElementById(gridId);
-        for (let i = 1; i <= days; i++) {
-            const dayDiv = document.createElement('div');
-            const dayOfWeek = new Date(2026, month, i).getDay();
-            const type = weekMap[dayOfWeek];
+        grid.innerHTML = "";
+        const details = monthDetails[mIdx];
+        
+        // Lege dagen
+        for(let i=0; i<details.start; i++) {
+            grid.innerHTML += `<div class="empty-day"></div>`;
+        }
+
+        // Echte dagen
+        const today = new Date();
+        const isCurrentMonth = today.getFullYear() === 2026 && today.getMonth() === mIdx;
+
+        for(let d=1; d<=details.days; d++) {
+            const key = `2026-${mIdx}-${d}`;
+            const status = progressData[key] || {am:false, pm:false};
+            const type = weekPattern[new Date(2026, mIdx, d).getDay()];
+            const isToday = isCurrentMonth && today.getDate() === d;
             
-            dayDiv.className = 'day-card';
-            dayDiv.id = `${month}-${i}`;
-            dayDiv.innerHTML = `<strong>${i}</strong><br><small style="font-size:0.7em">${type}</small>`;
-            dayDiv.onclick = () => showDetail(month, i, type);
-            grid.appendChild(dayDiv);
+            const card = document.createElement('div');
+            card.className = `day-card ${status.am && status.pm ? 'all-done' : ''} ${isToday ? 'today' : ''}`;
+            card.onclick = () => openModal(mIdx, d, type, key);
+            card.innerHTML = `
+                <div>
+                    <div class="day-number">${d}</div>
+                    <div class="day-type">${type}</div>
+                </div>
+                <div class="dots">
+                    <div class="dot ${status.am ? 'done' : ''}"></div>
+                    <div class="dot ${status.pm ? 'done' : ''}"></div>
+                </div>
+            `;
+            grid.appendChild(card);
         }
     }
 
-    function showDetail(month, day, type) {
-        selectedDayId = `${month}-${day}`;
-        const detailView = document.getElementById('detail-view');
-        const detailDate = document.getElementById('detail-date');
-        const detailContent = document.getElementById('detail-content');
-        const monthName = month === 0 ? "Januari" : "Februari";
+    function openModal(m, d, type, key) {
+        currentKey = key;
         const routine = routines[type];
+        document.getElementById('modal').style.display = 'flex';
+        document.getElementById('modal-title').innerText = `${d} ${m===0?'Januari':'Februari'}`;
+        document.getElementById('modal-subtitle').innerText = `Focus: ${type}`;
+        
+        document.getElementById('desc-am').innerText = routine.am;
+        document.getElementById('desc-pm').innerText = routine.pm;
 
-        detailView.style.display = 'block';
-        detailDate.innerText = `${day} ${monthName} - Focus: ${type}`;
-        detailContent.innerHTML = `
-            <div class="routine-block">
-                <span class="tag">OCHTEND (AM)</span>
-                <p>${routine.am}</p>
-            </div>
-            <div class="routine-block">
-                <span class="tag">AVOND (PM)</span>
-                <p>${routine.pm}</p>
-            </div>
-            <p><i><strong>Tip:</strong> ${routine.note}</i></p>
-        `;
-        window.scrollTo(0, document.body.scrollHeight);
+        updateModalUI();
     }
 
-    function markComplete() {
-        if (selectedDayId) {
-            document.getElementById(selectedDayId).classList.add('completed');
-            alert("Goed gedaan! Je huid zal je dankbaar zijn. ✨");
-            closeDetail();
+    function updateModalUI() {
+        const status = progressData[currentKey] || {am:false, pm:false};
+        
+        // Toggle classes
+        const btnAm = document.getElementById('btn-am');
+        const btnPm = document.getElementById('btn-pm');
+        
+        if(status.am) btnAm.classList.add('completed'); else btnAm.classList.remove('completed');
+        if(status.pm) btnPm.classList.add('completed'); else btnPm.classList.remove('completed');
+
+        // Emoji logic
+        const emoji = document.getElementById('modal-emoji');
+        if (status.am && status.pm) emoji.innerText = "🤩";
+        else if (status.am || status.pm) emoji.innerText = "🙂";
+        else emoji.innerText = "😴";
+    }
+
+    function toggleTask(period) {
+        if(!progressData[currentKey]) progressData[currentKey] = {am:false, pm:false};
+        
+        // Check of we klaar waren met alles VOOR de klik (om te weten of we net 100% halen)
+        const wasDone = progressData[currentKey].am && progressData[currentKey].pm;
+
+        progressData[currentKey][period] = !progressData[currentKey][period];
+        
+        // Opslaan
+        localStorage.setItem('skinCarePro_2026', JSON.stringify(progressData));
+        
+        // Check of we NU klaar zijn met alles
+        const isDone = progressData[currentKey].am && progressData[currentKey].pm;
+        
+        updateModalUI();
+        renderMonth(0, 'grid-0'); // Refresh grids
+        renderMonth(1, 'grid-1');
+        updateProgress();
+
+        // Confetti trigger als dag compleet is (en dat nog niet was)
+        if(isDone && !wasDone) {
+            confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
         }
     }
 
-    function closeDetail() {
-        document.getElementById('detail-view').style.display = 'none';
+    function updateProgress() {
+        // Bereken totaal checks voor HUIDIGE maand
+        const details = monthDetails[currentMonthIdx];
+        let totalChecks = details.days * 2; // 2 per dag
+        let doneChecks = 0;
+
+        for(let d=1; d<=details.days; d++) {
+            const k = `2026-${currentMonthIdx}-${d}`;
+            if(progressData[k]) {
+                if(progressData[k].am) doneChecks++;
+                if(progressData[k].pm) doneChecks++;
+            }
+        }
+
+        const percentage = Math.round((doneChecks / totalChecks) * 100);
+        document.getElementById('progress-bar').style.width = `${percentage}%`;
+        document.getElementById('stats-text').innerText = `${percentage}% voltooid in ${currentMonthIdx===0?'Januari':'Februari'}`;
     }
 
-    // Initialiseer
-    generateCalendar(0, 31, 'jan-grid');
-    generateCalendar(1, 28, 'feb-grid');
+    function switchMonth(idx) {
+        currentMonthIdx = idx;
+        document.querySelectorAll('.tab-btn').forEach((b, i) => b.classList.toggle('active', i===idx));
+        document.getElementById('calendar-jan').classList.toggle('active', idx===0);
+        document.getElementById('calendar-feb').classList.toggle('active', idx===1);
+        updateProgress(); // Update balk voor nieuwe maand
+    }
+
+    function closeModal(e) { if(e.target.id === 'modal') closeModalDirect(); }
+    function closeModalDirect() { document.getElementById('modal').style.display = 'none'; }
+
+    init();
 </script>
 
 </body>
