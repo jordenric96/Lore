@@ -8,7 +8,7 @@
     <link rel="manifest" href="manifest.json">
     <link rel="icon" type="image/jpeg" href="1768758855207.jpg">
     <link rel="apple-touch-icon" href="1768758855207.jpg">
-    <meta name="theme-color" content="#f9f5e8">
+    <meta name="theme-color" content="#fcfbf7">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-capable" content="yes">
 
@@ -19,29 +19,28 @@
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         
         :root {
-            /* Palette gebaseerd op de header afbeelding */
-            --bg-color: #fcfbf7;        /* Warme crème achtergrond */
+            --bg-color: #fcfbf7;
             --card-bg: #ffffff;
-            --text: #5d4037;            /* Donker sepia bruin (zachter dan zwart) */
-            --text-muted: #8d7b75;      /* Lichter bruin/grijs */
+            --text: #5d4037;
+            --text-muted: #8d7b75;
             
-            --terracotta: #cc8468;      /* De hoofdkleur uit de banner */
-            --sage-green: #8fa89b;      /* De kleur van de blaadjes */
-            --sage-dark: #6e857a;       /* Iets donkerder voor tekst */
-            --sage-light: #f1f6f4;      /* Achtergrondjes */
+            --terracotta: #cc8468;
+            --sage-green: #8fa89b;
+            --sage-dark: #6e857a;
+            --sage-light: #f1f6f4;
             
-            --gold: #e8cf88;            /* De kleur van de bloemen */
+            --gold: #e8cf88;
             
-            --success: #8fa89b;         /* Succes is nu sage green */
+            --success: #8fa89b;
             --danger: #e74c3c;
             --border-color: #f0ebe5;
             --modal-bg: #ffffff;
             --chip-bg: #f4f0ec;
-            --shadow: rgba(93, 64, 55, 0.08); /* Schaduw met vleugje bruin */
+            --shadow: rgba(93, 64, 55, 0.08);
 
-            --retinol-border: #d99a9a; /* Zachter roze passend bij terracotta */
-            --peptide-border: #8fa89b; /* Sage */
-            --mask-border: #9abfd9;    /* Zacht blauw */
+            --retinol-border: #d99a9a;
+            --peptide-border: #8fa89b;
+            --mask-border: #9abfd9;
         }
 
         body.dark-mode {
@@ -64,14 +63,19 @@
             background-color: var(--bg-color);
             color: var(--text);
             margin: 0;
-            padding: 20px 15px 40px 15px;
+            /* Layout fix: Zorgt voor veilige marges links/rechts */
+            padding: 20px 20px 40px 20px;
             overflow-x: hidden;
             user-select: none;
             min-height: 100vh;
             transition: background 0.3s;
         }
 
-        .container { max-width: 500px; margin: 0 auto; width: 100%; }
+        .container { 
+            max-width: 500px; 
+            margin: 0 auto; 
+            width: 100%; 
+        }
 
         /* Top Nav */
         .top-nav { display: flex; justify-content: space-between; margin-bottom: 15px; }
@@ -104,20 +108,19 @@
         .month-chip { flex: 0 0 auto; padding: 8px 16px; border-radius: 18px; background: var(--card-bg); color: var(--text-muted); font-weight: 600; font-size: 0.9em; cursor: pointer; box-shadow: 0 2px 4px var(--shadow); transition: 0.2s; border: 1px solid var(--border-color); }
         .month-chip.active { background: var(--terracotta); color: white; border-color: var(--terracotta); box-shadow: 0 4px 12px rgba(204, 132, 104, 0.4); transform: translateY(-1px); }
 
-        /* --- NIEUWE KALENDER GRID (GROTERE KAARTJES) --- */
+        /* --- KALENDER GRID --- */
         .calendar-grid { 
             display: grid; 
             grid-template-columns: repeat(7, 1fr); 
-            gap: 8px; 
+            gap: 8px; /* Ruimte tussen kaartjes */
+            width: 100%;
         }
 
         .day-card {
             background: var(--card-bg); 
             border-radius: 12px; 
-            /* Hier zorgen we voor meer hoogte */
             aspect-ratio: 1 / 1.6; 
-            min-height: 85px; /* Voorkomt dat ze te klein worden */
-            
+            min-height: 85px; 
             position: relative;
             cursor: pointer; 
             border: 2px solid transparent;
@@ -126,49 +129,22 @@
         }
         .day-card:active { transform: scale(0.96); }
 
-        /* Ruimere indeling binnen de kaart */
-        .card-date {
-            position: absolute;
-            top: 6px; left: 6px;
-            font-weight: 700; font-size: 1.1em;
-            color: var(--text);
-        }
+        .card-date { position: absolute; top: 6px; left: 6px; font-weight: 700; font-size: 1.1em; color: var(--text); }
+        .card-dayname { position: absolute; top: 8px; right: 6px; font-size: 0.6em; font-weight: 700; color: var(--text-muted); text-transform: uppercase; }
         
-        .card-dayname {
-            position: absolute;
-            top: 8px; right: 6px;
-            font-size: 0.6em;
-            font-weight: 700;
-            color: var(--text-muted);
-            text-transform: uppercase;
-        }
-
         .card-focus {
-            position: absolute;
-            top: 50%; left: 50%; transform: translate(-50%, -50%); /* Centraal */
-            width: 100%;
-            text-align: center;
-            font-size: 0.6em; /* Iets groter */
-            color: var(--text-muted);
-            text-transform: uppercase;
-            font-weight: 700;
-            white-space: nowrap; overflow: hidden;
-            padding: 0 2px;
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 100%; text-align: center; font-size: 0.6em; color: var(--text-muted);
+            text-transform: uppercase; font-weight: 700; white-space: nowrap; overflow: hidden; padding: 0 2px;
         }
 
-        .card-dots {
-            position: absolute;
-            bottom: 8px; left: 0; right: 0;
-            display: flex; justify-content: center; gap: 5px;
-        }
+        .card-dots { position: absolute; bottom: 8px; left: 0; right: 0; display: flex; justify-content: center; gap: 5px; }
         .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--chip-bg); }
         .dot.done { background: var(--sage-green); }
 
-        /* Borders & States */
         .day-card[data-type="Retinol"] { border-bottom: 4px solid var(--retinol-border); }
         .day-card[data-type="Peptides"] { border-bottom: 4px solid var(--peptide-border); }
         .day-card[data-type="Mask"] { border-bottom: 4px solid var(--mask-border); }
-        
         .day-card.today { background: #fffcf5; border-color: var(--gold) !important; }
         .day-card.has-selfie { background-color: var(--sage-light); }
         
@@ -176,9 +152,7 @@
         .modal-overlay { position: fixed; inset: 0; background: rgba(93, 64, 55, 0.4); display: none; align-items: flex-end; justify-content: center; z-index: 2000; backdrop-filter: blur(3px); }
         .modal-content { background: var(--modal-bg); width: 100%; max-width: 500px; padding: 25px; border-radius: 25px 25px 0 0; box-shadow: 0 -10px 40px rgba(0,0,0,0.2); animation: slideUp 0.3s; max-height: 90vh; overflow-y: auto; }
         
-        /* Gallery Modal */
         #gallery-modal .modal-content { height: 90vh; display: flex; flex-direction: column; padding: 20px; }
-        
         .filter-bar { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid var(--border-color); scrollbar-width: none; flex-shrink: 0; }
         .filter-bar::-webkit-scrollbar { display: none; }
         .filter-chip { padding: 6px 12px; border-radius: 15px; background: var(--chip-bg); font-size: 0.85em; white-space: nowrap; color: var(--text-muted); cursor: pointer; border: 1px solid transparent; transition: 0.2s; }
@@ -194,7 +168,6 @@
         .btn-delete { background: var(--chip-bg); border: none; width: 35px; height: 35px; border-radius: 50%; color: var(--danger); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.2em; flex-shrink: 0; }
         .no-photos { text-align: center; padding: 40px; color: var(--text-muted); font-style: italic; }
 
-        /* Lightbox */
         #lightbox { position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 3000; display: none; align-items: center; justify-content: center; animation: fadeIn 0.2s; }
         #lightbox img { max-width: 100%; max-height: 100%; object-fit: contain; }
         #lightbox-close { position: absolute; top: 20px; right: 20px; color: white; font-size: 2em; cursor: pointer; background: rgba(255,255,255,0.2); width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 50%; }
@@ -367,12 +340,11 @@
         selectMonth(currentMonthIdx);
     }
 
-    // --- PHOTO COMPRESSION & SAVING ---
+    // --- PHOTO COMPRESSION ---
     function handlePhoto(input) {
         if (input.files && input.files[0]) {
             const file = input.files[0];
             const reader = new FileReader();
-            
             document.getElementById('cam-text').innerText = "⏳ Bezig met opslaan...";
             
             reader.onload = function(e) {
@@ -585,6 +557,41 @@
         if(data.am && data.pm && !wasDone) confetti({ particleCount: 150, spread: 60, origin: { y: 0.7 }, colors: ['#cc8468', '#e8cf88', '#8fa89b'] });
     }
 
+    // --- TRUE STREAK LOGIC ---
+    function calculateStreak() {
+        let streak = 0;
+        let d = new Date();
+        // Voor de zekerheid: als we in 2026 zitten, gebruik datum, anders simuleer vandaag.
+        // Omdat de app voor 2026 is, en we nu waarschijnlijk testen in 2024/25, is de streak 0 tenzij we data hebben.
+        // De logica hieronder werkt universeel op basis van de datum van vandaag.
+        
+        // Helper
+        const getKey = (dateObj) => `${2026}-${dateObj.getMonth()}-${dateObj.getDate()}`; // FORCE 2026 JAAR
+        const hasData = (dateObj) => {
+            const k = getKey(dateObj);
+            const entry = progressData[k];
+            return entry && (entry.am || entry.pm);
+        };
+
+        // 1. Check Vandaag
+        if (!hasData(d)) {
+            // Als vandaag leeg is, check gisteren (misschien moet je vandaag nog invullen)
+            d.setDate(d.getDate() - 1);
+            if (!hasData(d)) return 0; // Gisteren ook leeg? Dan streak 0.
+        }
+
+        // 2. Loop terug
+        while (true) {
+            if (hasData(d)) {
+                streak++;
+                d.setDate(d.getDate() - 1);
+            } else {
+                break;
+            }
+        }
+        return streak;
+    }
+
     function updateStats() {
         const daysInMonth = new Date(2026, currentMonthIdx + 1, 0).getDate();
         let totalChecks = daysInMonth * 2; let doneChecks = 0;
@@ -594,8 +601,8 @@
         }
         document.getElementById('progress-bar').style.width = `${Math.round((doneChecks / totalChecks) * 100)}%`;
         document.getElementById('progress-text').innerText = `${Math.round((doneChecks / totalChecks) * 100)}% van ${monthNames[currentMonthIdx]}`;
-        let activeDays = 0; Object.values(progressData).forEach(day => { if(day.am || day.pm) activeDays++; });
-        document.getElementById('streak-count').innerText = activeDays;
+        
+        document.getElementById('streak-count').innerText = calculateStreak();
     }
 
     function toggleDarkMode() { document.body.classList.toggle('dark-mode'); localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light'); }
