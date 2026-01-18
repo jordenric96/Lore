@@ -8,7 +8,7 @@
     <link rel="manifest" href="manifest.json">
     <link rel="icon" type="image/jpeg" href="1768758855207.jpg">
     <link rel="apple-touch-icon" href="1768758855207.jpg">
-    <meta name="theme-color" content="#fff8fa">
+    <meta name="theme-color" content="#fcfdfc">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-capable" content="yes">
 
@@ -19,25 +19,24 @@
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         
         :root {
-            --bg-color: #fcfdfc; /* Iets koeler wit */
+            --bg-color: #fcfdfc;
             --card-bg: #ffffff;
             --text: #4a4a4a;
-            --text-muted: #888;
+            --text-muted: #9ca3af;
             
-            /* Nieuw Kleurenpalet */
-            --terracotta: #d05e5e; /* Accent kleur */
-            --gold: #e0c097;       /* Zachter goud */
+            /* Sage Green Palette */
+            --sage-green: #8da399;
+            --sage-dark: #6b8279;
+            --sage-light: #f1f8f5;
+            --terracotta: #d05e5e; 
+            --gold: #e0c097;
             
-            --sage-green: #8da399;       /* Hoofdkleur groen */
-            --sage-dark: #6b8279;        /* Voor tekst/actieve knoppen */
-            --sage-light: #f1f8f5;       /* Voor achtergronden */
             --success: var(--sage-green);
-
             --danger: #e74c3c;
-            --border-color: #eee;
+            --border-color: #f3f4f6;
             --modal-bg: #ffffff;
             --chip-bg: #f5f7f6;
-            --shadow: rgba(0,0,0,0.05);
+            --shadow: rgba(0,0,0,0.04);
 
             --retinol-border: #f783ac;
             --peptide-border: #8da399;
@@ -49,12 +48,9 @@
             --card-bg: #27272a;
             --text: #e4e4e7;
             --text-muted: #a1a1aa;
-            --terracotta: #e07a7a;
-            
             --sage-green: #a3b8b0;
             --sage-dark: #8da399;
             --sage-light: #2c3834;
-
             --border-color: #3f3f46;
             --modal-bg: #27272a;
             --chip-bg: #3f3f46;
@@ -78,90 +74,116 @@
         /* Top Nav */
         .top-nav { display: flex; justify-content: space-between; margin-bottom: 10px; }
         .icon-btn { background: none; border: none; font-size: 1.5em; cursor: pointer; color: var(--text); padding: 5px; }
-        .gallery-btn { font-size: 0.9em; background: var(--sage-dark); color: white; padding: 5px 15px; border-radius: 15px; border:none; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 5px; box-shadow: 0 2px 5px var(--shadow); transition: 0.2s; }
+        .gallery-btn { font-size: 0.9em; background: var(--sage-dark); color: white; padding: 6px 16px; border-radius: 20px; border:none; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 6px; box-shadow: 0 2px 5px var(--shadow); transition: 0.2s; }
         .gallery-btn:active { transform: scale(0.98); }
 
-        header { text-align: center; margin-bottom: 20px; }
-        h1 { font-weight: 700; margin: 0 0 10px 0; font-size: 1.8em; line-height: 1.2; }
+        header { text-align: center; margin-bottom: 25px; }
+        h1 { font-weight: 700; margin: 0 0 10px 0; font-size: 1.8em; line-height: 1.2; letter-spacing: -0.5px; }
         .name-highlight { color: var(--terracotta); font-family: 'Georgia', serif; font-style: italic; }
 
-        .stats-row { display: flex; justify-content: space-between; align-items: center; font-size: 0.8em; color: var(--text-muted); margin-bottom: 10px; padding: 0 5px; }
-        .streak-badge { background: var(--card-bg); padding: 4px 10px; border-radius: 12px; box-shadow: 0 2px 5px var(--shadow); font-weight: bold; color: var(--sage-dark); }
+        .stats-row { display: flex; justify-content: space-between; align-items: center; font-size: 0.85em; color: var(--text-muted); margin-bottom: 15px; padding: 0 5px; font-weight: 500; }
+        .streak-badge { background: var(--card-bg); padding: 5px 12px; border-radius: 12px; box-shadow: 0 2px 8px var(--shadow); font-weight: bold; color: var(--sage-dark); border: 1px solid var(--border-color); }
 
-        /* Groene Progress Bar */
-        .progress-container { background: var(--chip-bg); border-radius: 20px; height: 8px; width: 100%; overflow: hidden; margin-bottom: 20px; }
-        .progress-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--sage-green), var(--sage-dark)); transition: width 0.6s ease; }
+        /* Progress Bar */
+        .progress-container { background: var(--chip-bg); border-radius: 20px; height: 6px; width: 100%; overflow: hidden; margin-bottom: 25px; }
+        .progress-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--sage-green), var(--sage-dark)); transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
 
-        /* Month Scroller (Groen Actief) */
-        .month-scroller { display: flex; overflow-x: auto; gap: 10px; padding: 5px 5px 15px 5px; margin-bottom: 10px; scrollbar-width: none; }
+        /* Month Scroller */
+        .month-scroller { display: flex; overflow-x: auto; gap: 8px; padding: 5px 5px 15px 5px; margin-bottom: 10px; scrollbar-width: none; }
         .month-scroller::-webkit-scrollbar { display: none; }
-        .month-chip { flex: 0 0 auto; padding: 8px 18px; border-radius: 20px; background: var(--card-bg); color: var(--text-muted); font-weight: 600; font-size: 0.9em; cursor: pointer; box-shadow: 0 2px 5px var(--shadow); transition: 0.2s; border: 1px solid transparent; }
-        .month-chip.active { background: var(--sage-dark); color: white; box-shadow: 0 4px 10px rgba(141, 163, 153, 0.4); transform: scale(1.05); }
+        .month-chip { flex: 0 0 auto; padding: 8px 16px; border-radius: 18px; background: var(--card-bg); color: var(--text-muted); font-weight: 600; font-size: 0.9em; cursor: pointer; box-shadow: 0 2px 4px var(--shadow); transition: 0.2s; border: 1px solid var(--border-color); }
+        .month-chip.active { background: var(--sage-dark); color: white; border-color: var(--sage-dark); box-shadow: 0 4px 12px rgba(107, 130, 121, 0.3); transform: translateY(-1px); }
 
-        /* Calendar Grid */
-        .weekdays { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; font-weight: bold; color: var(--text-muted); margin-bottom: 8px; font-size: 0.75em; text-transform: uppercase; }
-        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
+        /* --- NIEUWE KALENDER GRID --- */
+        .calendar-grid { 
+            display: grid; 
+            grid-template-columns: repeat(7, 1fr); 
+            gap: 8px; 
+        }
 
         .day-card {
-            background: var(--card-bg); border-radius: 12px; aspect-ratio: 1 / 1.35; 
-            padding: 6px 2px;
-            display: flex; flex-direction: column; 
-            align-items: center; justify-content: space-between;
-            cursor: pointer; border: 2px solid transparent;
-            box-shadow: 0 2px 4px var(--shadow); transition: transform 0.1s;
+            background: var(--card-bg); 
+            border-radius: 14px; 
+            aspect-ratio: 1 / 1.25; /* Iets vierkanter */
+            position: relative;
+            cursor: pointer; 
+            border: 2px solid transparent;
+            box-shadow: 0 3px 6px var(--shadow); 
+            transition: transform 0.1s;
         }
-        .day-card:active { transform: scale(0.95); }
+        .day-card:active { transform: scale(0.96); }
 
-        /* Type Borders */
+        /* Inhoud van de kaart (Absolute positionering voor strakke uitlijning) */
+        .card-date {
+            position: absolute;
+            top: 6px; left: 8px;
+            font-weight: 700; font-size: 1.1em;
+            color: var(--text);
+        }
+        
+        .card-dayname {
+            position: absolute;
+            top: 8px; right: 8px;
+            font-size: 0.6em;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        .card-focus {
+            position: absolute;
+            bottom: 22px; left: 0; right: 0;
+            text-align: center;
+            font-size: 0.55em;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            font-weight: 600;
+            white-space: nowrap; overflow: hidden;
+        }
+
+        .card-dots {
+            position: absolute;
+            bottom: 8px; left: 0; right: 0;
+            display: flex; justify-content: center; gap: 4px;
+        }
+        .dot { width: 5px; height: 5px; border-radius: 50%; background: var(--chip-bg); }
+        .dot.done { background: var(--success); }
+
+        /* Borders & States */
         .day-card[data-type="Retinol"] { border-bottom: 3px solid var(--retinol-border); }
         .day-card[data-type="Peptides"] { border-bottom: 3px solid var(--peptide-border); }
         .day-card[data-type="Mask"] { border-bottom: 3px solid var(--mask-border); }
-        .day-card.today { border-color: var(--gold) !important; background: rgba(224, 192, 151, 0.15); }
         
-        /* Subtle indicator for photo (Background tint) */
+        .day-card.today { background: rgba(224, 192, 151, 0.15); border-color: var(--gold) !important; }
         .day-card.has-selfie { background-color: var(--sage-light); }
-
-        .day-content { display: flex; flex-direction: column; align-items: center; justify-content: center; flex-grow: 1; width: 100%; }
-        .day-number { font-weight: 700; font-size: 1.1em; line-height: 1; margin-bottom: 3px; }
-        .day-mini-label { font-size: 0.5em; color: var(--text-muted); text-transform: uppercase; white-space: nowrap; overflow: hidden; max-width: 90%; }
         
-        .dots { display: flex; gap: 3px; height: 6px; }
-        .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--chip-bg); }
-        .dot.done { background: var(--success); }
-        .empty-day { visibility: hidden; }
-
         /* Modals */
         .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: none; align-items: flex-end; justify-content: center; z-index: 2000; backdrop-filter: blur(2px); }
         .modal-content { background: var(--modal-bg); width: 100%; max-width: 500px; padding: 25px; border-radius: 25px 25px 0 0; box-shadow: 0 -10px 40px rgba(0,0,0,0.3); animation: slideUp 0.3s; max-height: 90vh; overflow-y: auto; }
         
-        /* Gallery Modal Styles */
+        /* Gallery Modal */
         #gallery-modal .modal-content { height: 90vh; display: flex; flex-direction: column; padding: 20px; }
         
-        /* Filter Bar (Groen Actief) */
         .filter-bar { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid var(--border-color); scrollbar-width: none; flex-shrink: 0; }
         .filter-bar::-webkit-scrollbar { display: none; }
         .filter-chip { padding: 6px 12px; border-radius: 15px; background: var(--chip-bg); font-size: 0.85em; white-space: nowrap; color: var(--text-muted); cursor: pointer; border: 1px solid transparent; transition: 0.2s; }
         .filter-chip.active { background: var(--sage-dark); color: white; }
 
         .gallery-grid { display: flex; flex-direction: column; gap: 15px; overflow-y: auto; flex-grow: 1; padding-bottom: 20px; }
-        .gallery-item { display: flex; gap: 15px; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 15px; position: relative; }
+        .gallery-item { display: flex; gap: 15px; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 15px; }
         .gallery-img { width: 90px; height: 90px; object-fit: cover; border-radius: 12px; border: 2px solid var(--border-color); background: #eee; cursor: zoom-in; flex-shrink: 0; }
-        .gallery-info { flex-grow: 1; }
         .gallery-info h4 { margin: 0 0 5px 0; color: var(--sage-dark); font-size: 1em; }
         .gallery-tags { display: flex; flex-wrap: wrap; gap: 4px; }
         .mini-tag { font-size: 0.75em; background: var(--chip-bg); padding: 2px 8px; border-radius: 4px; color: var(--text-muted); }
-        
-        /* Delete Button */
         .btn-delete { background: var(--chip-bg); border: none; width: 35px; height: 35px; border-radius: 50%; color: var(--danger); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.2em; flex-shrink: 0; }
-
         .no-photos { text-align: center; padding: 40px; color: var(--text-muted); font-style: italic; }
 
-        /* Lightbox (Zoom) */
+        /* Lightbox */
         #lightbox { position: fixed; inset: 0; background: black; z-index: 3000; display: none; align-items: center; justify-content: center; animation: fadeIn 0.2s; }
         #lightbox img { max-width: 100%; max-height: 100%; object-fit: contain; }
         #lightbox-close { position: absolute; top: 20px; right: 20px; color: white; font-size: 2em; cursor: pointer; background: rgba(0,0,0,0.5); width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 50%; }
 
-        /* Routine & Camera Button (Groen Completed) */
+        /* Form */
         .routine-box { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; padding: 15px; margin-bottom: 12px; cursor: pointer; display: flex; align-items: flex-start; transition: 0.2s; box-shadow: 0 4px 10px var(--shadow); }
         .routine-box.completed { background: var(--sage-light); border-color: var(--success); }
         .check-circle { min-width: 26px; height: 26px; border-radius: 50%; border: 2px solid #ddd; margin-right: 15px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 14px; }
@@ -171,24 +193,18 @@
         .routine-list { margin: 0; padding-left: 15px; font-size: 0.9em; color: var(--text-muted); line-height: 1.5; }
         strong { color: var(--terracotta); }
 
-        .btn-camera { 
-            display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%;
-            padding: 12px; background: var(--chip-bg); border-radius: 12px; cursor: pointer;
-            margin-top: 15px; font-weight: bold; color: var(--text); border: 2px dashed var(--border-color);
-            transition: 0.2s;
-        }
+        .btn-camera { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; padding: 14px; background: var(--chip-bg); border-radius: 14px; cursor: pointer; margin-top: 15px; font-weight: bold; color: var(--text); border: 2px dashed var(--border-color); transition: 0.2s; }
         .btn-camera.has-photo { border-color: var(--success); background: var(--sage-light); color: var(--success); }
         
-        /* Modal Extras (Tags Groen) */
         .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
         .modal-title h2 { margin: 0; font-size: 1.4em; color: var(--text); }
         .diary-section { margin-top: 20px; padding-top: 15px; border-top: 1px solid var(--border-color); }
-        .diary-title { font-size: 0.9em; font-weight: bold; margin-bottom: 10px; color: var(--text-muted); }
+        .diary-title { font-size: 0.8em; font-weight: 700; letter-spacing: 0.5px; margin-bottom: 10px; color: var(--text-muted); }
         .tags-container { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 15px; }
-        .tag-chip { padding: 6px 12px; border-radius: 15px; background: var(--chip-bg); color: var(--text-muted); font-size: 0.85em; cursor: pointer; border: 1px solid transparent; transition: 0.2s; }
+        .tag-chip { padding: 8px 14px; border-radius: 18px; background: var(--chip-bg); color: var(--text-muted); font-size: 0.85em; cursor: pointer; border: 1px solid transparent; transition: 0.2s; font-weight: 500; }
         .tag-chip.selected { background: var(--sage-dark); color: white; }
         
-        .btn-close { width: 100%; padding: 14px; background: var(--chip-bg); border: none; border-radius: 12px; font-weight: bold; color: var(--text); margin-top: 10px; font-size: 1em; cursor: pointer; }
+        .btn-close { width: 100%; padding: 14px; background: var(--chip-bg); border: none; border-radius: 14px; font-weight: bold; color: var(--text); margin-top: 10px; font-size: 1em; cursor: pointer; }
 
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
@@ -216,7 +232,6 @@
         <div class="month-scroller" id="month-scroller"></div>
     </header>
 
-    <div class="weekdays"><div>Zo</div><div>Ma</div><div>Di</div><div>Wo</div><div>Do</div><div>Vr</div><div>Za</div></div>
     <div class="calendar-grid" id="main-grid"></div>
 </div>
 
@@ -248,8 +263,7 @@
 
         <div class="diary-section">
             <div class="diary-title">TAGS & LOG</div>
-            <div class="tags-container" id="tags-container">
-                </div>
+            <div class="tags-container" id="tags-container"></div>
         </div>
 
         <label class="btn-camera" id="btn-camera-label">
@@ -267,10 +281,7 @@
             <h2 style="margin:0">📸 Mijn Tijdlijn</h2>
             <span style="font-size:1.5em; cursor:pointer; color:var(--text-muted);" onclick="closeGalleryDirect()">×</span>
         </div>
-        
-        <div class="filter-bar" id="gallery-filters">
-            </div>
-
+        <div class="filter-bar" id="gallery-filters"></div>
         <div class="gallery-grid" id="gallery-grid"></div>
     </div>
 </div>
@@ -283,7 +294,7 @@
 <div id="settings-modal" class="modal-overlay" onclick="closeSettings(event)">
     <div class="modal-content" onclick="event.stopPropagation()">
         <h2>Instellingen</h2>
-        <p style="color:#888;">Backup je vinkjes. Let op: Foto's zitten NIET in de backup (browser opslag).</p>
+        <p style="color:#888;">Backup je vinkjes (excl. foto's).</p>
         <button class="btn-close" style="background:var(--sage-dark); color:white;" onclick="exportData()">💾 Vinkjes Downloaden</button>
         <button class="btn-close" onclick="document.getElementById('file-input').click()">📂 Vinkjes Inladen</button>
         <input type="file" id="file-input" style="display:none" onchange="importData(this)">
@@ -292,14 +303,14 @@
 </div>
 
 <script>
-    // --- Config ---
     const routines = {
-        "Retinol": { color: "#d63384", bg: "#fff0f6", am: ["Cleanser", "**Copper Peptides**", "Niacinamide", "Moisturizer", "SPF 50"], pm: ["Double Cleanse", "**Retinol 0.2%**", "Moisturizer (wacht 20m)"] },
-        "Peptides": { color: "#4a5d54", bg: "#f0fdf4", am: ["Cleanser", "**Copper Peptides**", "Niacinamide", "Moisturizer", "SPF 50"], pm: ["Cleanser", "**Copper Peptides**", "Moisturizer", "Herstel & Hydratatie"] },
-        "Mask": { color: "#0d6efd", bg: "#eefbff", am: ["Cleanser", "**Copper Peptides**", "Niacinamide", "Moisturizer", "SPF 50"], pm: ["Cleanser", "**Salicylic Mask** (10m)", "Afspoelen", "Moisturizer"] }
+        "Retinol": { am: ["Cleanser", "**Copper Peptides**", "Niacinamide", "Moisturizer", "SPF 50"], pm: ["Double Cleanse", "**Retinol 0.2%**", "Moisturizer (wacht 20m)"] },
+        "Peptides": { am: ["Cleanser", "**Copper Peptides**", "Niacinamide", "Moisturizer", "SPF 50"], pm: ["Cleanser", "**Copper Peptides**", "Moisturizer", "Herstel & Hydratatie"] },
+        "Mask": { am: ["Cleanser", "**Copper Peptides**", "Niacinamide", "Moisturizer", "SPF 50"], pm: ["Cleanser", "**Salicylic Mask** (10m)", "Afspoelen", "Moisturizer"] }
     };
     const weekPattern = ["Peptides", "Retinol", "Peptides", "Mask", "Peptides", "Retinol", "Peptides"];
     const monthNames = ["Januari", "Februari", "Maart", "April", "Mei", "Juni", "Juli", "Augustus", "September", "Oktober", "November", "December"];
+    const shortDays = ["ZO", "MA", "DI", "WO", "DO", "VR", "ZA"];
     const availableTags = ["Glow ✨", "Droog 🌵", "Rood 😡", "Puistje 🔴", "Gevoelig 🤕", "Vet 🧈"];
 
     let progressData = JSON.parse(localStorage.getItem('loreSkinData_2026')) || {};
@@ -307,38 +318,30 @@
     let currentMonthIdx = 0;
     let currentFilter = 'all';
     
-    // --- DB Setup ---
+    // DB Setup
     let db;
     const request = indexedDB.open("LoreSkinDB", 1);
-    request.onupgradeneeded = function(e) {
-        db = e.target.result;
-        if (!db.objectStoreNames.contains("photos")) db.createObjectStore("photos", { keyPath: "dateKey" });
-    };
+    request.onupgradeneeded = function(e) { db = e.target.result; if (!db.objectStoreNames.contains("photos")) db.createObjectStore("photos", { keyPath: "dateKey" }); };
     request.onsuccess = function(e) { db = e.target.result; init(); };
 
-    // --- Init ---
     function init() {
         if(localStorage.getItem('theme') === 'dark') document.body.classList.add('dark-mode');
         
-        // Tags renderen in Modal (EERST LEEGMAKEN!)
+        // Render Tags
         const tagContainer = document.getElementById('tags-container');
         tagContainer.innerHTML = '';
         availableTags.forEach(tag => {
             const el = document.createElement('div');
-            el.className = 'tag-chip';
-            el.innerText = tag;
-            el.onclick = () => toggleTag(tag, el);
+            el.className = 'tag-chip'; el.innerText = tag; el.onclick = () => toggleTag(tag, el);
             tagContainer.appendChild(el);
         });
 
-        // Filters renderen in Gallery (EERST LEEGMAKEN & ALLES TOEVOEGEN)
+        // Render Filters
         const filterBar = document.getElementById('gallery-filters');
         filterBar.innerHTML = '<div class="filter-chip active" onclick="filterGallery(\'all\', this)">Alles</div>';
         availableTags.forEach(tag => {
             const el = document.createElement('div');
-            el.className = 'filter-chip';
-            el.innerText = tag;
-            el.onclick = () => filterGallery(tag, el);
+            el.className = 'filter-chip'; el.innerText = tag; el.onclick = () => filterGallery(tag, el);
             filterBar.appendChild(el);
         });
 
@@ -348,33 +351,59 @@
         selectMonth(currentMonthIdx);
     }
 
-    // --- Photos & Gallery ---
+    // --- PHOTO COMPRESSION & SAVING ---
     function handlePhoto(input) {
         if (input.files && input.files[0]) {
             const file = input.files[0];
             const reader = new FileReader();
+            
+            document.getElementById('cam-text').innerText = "⏳ Bezig met opslaan...";
+            
             reader.onload = function(e) {
-                const imgData = e.target.result; 
-                const tx = db.transaction(["photos"], "readwrite");
-                tx.objectStore("photos").put({ dateKey: currentKey, image: imgData, timestamp: new Date() });
-                
-                document.getElementById('cam-text').innerText = "✅ Foto Opgeslagen!";
-                document.getElementById('btn-camera-label').classList.add('has-photo');
-                
-                if(!progressData[currentKey]) progressData[currentKey] = {};
-                progressData[currentKey].hasPhoto = true;
-                localStorage.setItem('loreSkinData_2026', JSON.stringify(progressData));
-                renderCalendar(currentMonthIdx);
+                const img = new Image();
+                img.src = e.target.result;
+                img.onload = function() {
+                    // Compressie Logica
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    
+                    const MAX_WIDTH = 1024; // Max grootte
+                    const MAX_HEIGHT = 1024;
+                    let width = img.width;
+                    let height = img.height;
+
+                    if (width > height) {
+                        if (width > MAX_WIDTH) { height *= MAX_WIDTH / width; width = MAX_WIDTH; }
+                    } else {
+                        if (height > MAX_HEIGHT) { width *= MAX_HEIGHT / height; height = MAX_HEIGHT; }
+                    }
+
+                    canvas.width = width;
+                    canvas.height = height;
+                    ctx.drawImage(img, 0, 0, width, height);
+
+                    // Opslaan als JPEG met lagere kwaliteit
+                    const dataUrl = canvas.toDataURL("image/jpeg", 0.7);
+
+                    const tx = db.transaction(["photos"], "readwrite");
+                    tx.objectStore("photos").put({ dateKey: currentKey, image: dataUrl, timestamp: new Date() });
+                    
+                    document.getElementById('cam-text').innerText = "✅ Foto Opgeslagen!";
+                    document.getElementById('btn-camera-label').classList.add('has-photo');
+                    
+                    if(!progressData[currentKey]) progressData[currentKey] = {};
+                    progressData[currentKey].hasPhoto = true;
+                    localStorage.setItem('loreSkinData_2026', JSON.stringify(progressData));
+                    renderCalendar(currentMonthIdx);
+                };
             };
             reader.readAsDataURL(file);
         }
     }
 
-    function openGallery() {
-        document.getElementById('gallery-modal').style.display = 'flex';
-        renderGalleryItems();
-    }
-
+    // --- Gallery ---
+    function openGallery() { document.getElementById('gallery-modal').style.display = 'flex'; renderGalleryItems(); }
+    
     function filterGallery(tag, el) {
         currentFilter = tag;
         document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
@@ -385,7 +414,6 @@
     function renderGalleryItems() {
         const grid = document.getElementById('gallery-grid');
         grid.innerHTML = "<div style='text-align:center; color:#888;'>Laden...</div>";
-        
         const tx = db.transaction(["photos"], "readonly");
         const req = tx.objectStore("photos").getAll();
         
@@ -393,69 +421,47 @@
             let photos = req.result;
             grid.innerHTML = "";
             photos.sort((a, b) => b.timestamp - a.timestamp);
+            let count = 0;
 
-            let visibleCount = 0;
             photos.forEach(photo => {
                 const dayData = progressData[photo.dateKey] || {};
                 const tags = dayData.tags || [];
-
                 if (currentFilter !== 'all' && !tags.includes(currentFilter)) return;
+                count++;
 
-                visibleCount++;
                 const parts = photo.dateKey.split('-'); 
                 const dateStr = `${parts[2]} ${monthNames[parseInt(parts[1])]}`;
-                
-                const tagsHTML = tags.length > 0 
-                    ? tags.map(t => `<span class="mini-tag">${t}</span>`).join('') 
-                    : '<span style="font-size:0.8em; color:#ccc">Geen tags</span>';
+                const tagsHTML = tags.length > 0 ? tags.map(t => `<span class="mini-tag">${t}</span>`).join('') : '<span style="font-size:0.8em; color:#ccc">Geen tags</span>';
 
                 const div = document.createElement('div');
                 div.className = 'gallery-item';
                 div.innerHTML = `
                     <img src="${photo.image}" class="gallery-img" onclick="openLightbox('${photo.image}')">
-                    <div class="gallery-info">
-                        <h4>${dateStr}</h4>
-                        <div class="gallery-tags">${tagsHTML}</div>
-                    </div>
+                    <div class="gallery-info"><h4>${dateStr}</h4><div class="gallery-tags">${tagsHTML}</div></div>
                     <button class="btn-delete" onclick="deletePhoto('${photo.dateKey}')">🗑️</button>
                 `;
                 grid.appendChild(div);
             });
-
-            if(visibleCount === 0) grid.innerHTML = "<div class='no-photos'>Geen foto's gevonden.</div>";
+            if(count === 0) grid.innerHTML = "<div class='no-photos'>Geen foto's gevonden.</div>";
         };
     }
 
     function deletePhoto(key) {
-        if(!confirm("Ben je zeker dat je deze foto wil verwijderen?")) return;
+        if(!confirm("Verwijderen?")) return;
         const tx = db.transaction(["photos"], "readwrite");
         tx.objectStore("photos").delete(key);
         tx.oncomplete = function() {
-            if(progressData[key]) {
-                progressData[key].hasPhoto = false;
-                localStorage.setItem('loreSkinData_2026', JSON.stringify(progressData));
-            }
-            renderGalleryItems(); 
-            renderCalendar(currentMonthIdx);
+            if(progressData[key]) { progressData[key].hasPhoto = false; localStorage.setItem('loreSkinData_2026', JSON.stringify(progressData)); }
+            renderGalleryItems(); renderCalendar(currentMonthIdx);
         };
     }
 
-    function openLightbox(src) {
-        document.getElementById('lightbox-img').src = src;
-        document.getElementById('lightbox').style.display = 'flex';
-    }
-    function closeLightbox() {
-        document.getElementById('lightbox').style.display = 'none';
-    }
-
-    // --- Calendar Logic ---
+    // --- Calendar ---
     function generateMonthSelector() {
         const container = document.getElementById('month-scroller');
         monthNames.forEach((name, idx) => {
             const chip = document.createElement('div');
-            chip.className = 'month-chip';
-            chip.innerText = name;
-            chip.id = `chip-${idx}`;
+            chip.className = 'month-chip'; chip.innerText = name; chip.id = `chip-${idx}`;
             chip.onclick = () => selectMonth(idx);
             container.appendChild(chip);
         });
@@ -484,7 +490,8 @@
         for(let d=1; d<=daysInMonth; d++) {
             const key = `2026-${mIdx}-${d}`;
             const data = progressData[key] || {};
-            const type = weekPattern[new Date(2026, mIdx, d).getDay()];
+            const dayIdx = new Date(2026, mIdx, d).getDay();
+            const type = weekPattern[dayIdx];
             const isToday = isCurrentMonth && today.getDate() === d;
             const hasSelfie = data.hasPhoto ? 'has-selfie' : '';
             
@@ -494,11 +501,10 @@
             card.onclick = () => openModal(mIdx, d, type, key);
             
             card.innerHTML = `
-                <div class="day-content">
-                    <div class="day-number">${d}</div>
-                    <div class="day-mini-label">${type}</div>
-                </div>
-                <div class="dots">
+                <div class="card-date">${d}</div>
+                <div class="card-dayname">${shortDays[dayIdx]}</div>
+                <div class="card-focus">${type}</div>
+                <div class="card-dots">
                     <div class="dot ${data.am ? 'done' : ''}"></div>
                     <div class="dot ${data.pm ? 'done' : ''}"></div>
                 </div>
@@ -515,21 +521,18 @@
         document.getElementById('modal').style.display = 'flex';
         document.getElementById('modal-date').innerText = `${d} ${monthNames[m]}`;
         
-        // Tags UI
+        // Tags
         const currentTags = progressData[currentKey].tags || [];
-        document.querySelectorAll('.tag-chip').forEach(chip => {
-            chip.classList.toggle('selected', currentTags.includes(chip.innerText));
-        });
+        document.querySelectorAll('.tag-chip').forEach(chip => { chip.classList.toggle('selected', currentTags.includes(chip.innerText)); });
 
-        // Camera UI
+        // Camera
         const camLabel = document.getElementById('btn-camera-label');
-        const camText = document.getElementById('cam-text');
         if (progressData[currentKey].hasPhoto) {
             camLabel.classList.add('has-photo');
-            camText.innerText = "✅ Foto Opgeslagen";
+            document.getElementById('cam-text').innerText = "✅ Foto Opgeslagen";
         } else {
             camLabel.classList.remove('has-photo');
-            camText.innerText = "📸 Maak Selfie";
+            document.getElementById('cam-text').innerText = "📸 Maak Selfie";
         }
 
         document.getElementById('list-am').innerHTML = r.am.map(s => `<li>${s.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')}</li>`).join('');
@@ -540,12 +543,8 @@
     function toggleTag(tag, el) {
         const data = progressData[currentKey];
         if(!data.tags) data.tags = [];
-        
-        if(data.tags.includes(tag)) {
-            data.tags = data.tags.filter(t => t !== tag);
-        } else {
-            data.tags.push(tag);
-        }
+        if(data.tags.includes(tag)) data.tags = data.tags.filter(t => t !== tag);
+        else data.tags.push(tag);
         el.classList.toggle('selected');
         localStorage.setItem('loreSkinData_2026', JSON.stringify(progressData));
     }
@@ -567,10 +566,8 @@
         const data = progressData[currentKey];
         const wasDone = data.am && data.pm;
         data[period] = !data[period];
-        
         localStorage.setItem('loreSkinData_2026', JSON.stringify(progressData));
         updateModalUI(); renderCalendar(currentMonthIdx); updateStats();
-        
         if(data.am && data.pm && !wasDone) confetti({ particleCount: 150, spread: 60, origin: { y: 0.7 }, colors: ['#d05e5e', '#e0c097', '#8da399'] });
     }
 
@@ -583,34 +580,22 @@
         }
         document.getElementById('progress-bar').style.width = `${Math.round((doneChecks / totalChecks) * 100)}%`;
         document.getElementById('progress-text').innerText = `${Math.round((doneChecks / totalChecks) * 100)}% van ${monthNames[currentMonthIdx]}`;
-
         let activeDays = 0; Object.values(progressData).forEach(day => { if(day.am || day.pm) activeDays++; });
         document.getElementById('streak-count').innerText = activeDays;
     }
 
-    function toggleDarkMode() {
-        document.body.classList.toggle('dark-mode');
-        localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
-    }
-    
+    function toggleDarkMode() { document.body.classList.toggle('dark-mode'); localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light'); }
     function openSettings() { document.getElementById('settings-modal').style.display = 'flex'; }
-    function closeSettings(e) { if(e.target.id === 'settings-modal') closeSettingsDirect(); }
     function closeSettingsDirect() { document.getElementById('settings-modal').style.display = 'none'; }
-    function closeModal(e) { if(e.target.id === 'modal') closeModalDirect(); }
     function closeModalDirect() { document.getElementById('modal').style.display = 'none'; }
-    function closeGalleryDirect(e) { if(!e || e.target.id === 'gallery-modal' || e.target.classList.contains('btn-close') || e.target.tagName === 'SPAN') document.getElementById('gallery-modal').style.display = 'none'; }
-
-    function exportData() {
-        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(progressData));
-        const a = document.createElement('a'); a.href = dataStr; a.download = "skin_backup.json"; document.body.appendChild(a); a.click(); a.remove();
-    }
-    function importData(input) {
-        const file = input.files[0]; if(!file) return;
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            try { progressData = JSON.parse(e.target.result); localStorage.setItem('loreSkinData_2026', JSON.stringify(progressData)); selectMonth(currentMonthIdx); closeSettingsDirect(); } catch(err) { alert("Fout bestand"); }
-        }; reader.readAsText(file);
-    }
+    function closeGalleryDirect() { document.getElementById('gallery-modal').style.display = 'none'; }
+    function openLightbox(src) { document.getElementById('lightbox-img').src = src; document.getElementById('lightbox').style.display = 'flex'; }
+    function closeLightbox() { document.getElementById('lightbox').style.display = 'none'; }
+    function closeModal(e) { if(e.target.id === 'modal') closeModalDirect(); }
+    function closeSettings(e) { if(e.target.id === 'settings-modal') closeSettingsDirect(); }
+    function closeGalleryDirectBtn(e) { if(!e || e.target.id === 'gallery-modal') closeGalleryDirect(); }
+    function exportData() { const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(progressData)); const a = document.createElement('a'); a.href = dataStr; a.download = "skin_backup.json"; document.body.appendChild(a); a.click(); a.remove(); }
+    function importData(input) { const file = input.files[0]; if(!file) return; const reader = new FileReader(); reader.onload = function(e) { try { progressData = JSON.parse(e.target.result); localStorage.setItem('loreSkinData_2026', JSON.stringify(progressData)); selectMonth(currentMonthIdx); closeSettingsDirect(); } catch(err) { alert("Fout bestand"); } }; reader.readAsText(file); }
     
     init();
 </script>
