@@ -15,7 +15,7 @@
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     
     <style>
-        /* --- 1. CSS & Layout --- */
+        /* --- 1. Global Styles --- */
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         
         :root {
@@ -26,6 +26,7 @@
             --terracotta: #d05e5e;
             --gold: #ffb703;
             --success: #27ae60;
+            --danger: #e74c3c;
             --border-color: #eee;
             --modal-bg: #ffffff;
             --chip-bg: #f3f3f3;
@@ -61,10 +62,10 @@
 
         .container { max-width: 500px; margin: 0 auto; width: 100%; }
 
-        /* Icons & Top Nav */
+        /* Top Nav */
         .top-nav { display: flex; justify-content: space-between; margin-bottom: 10px; }
         .icon-btn { background: none; border: none; font-size: 1.5em; cursor: pointer; color: var(--text); padding: 5px; }
-        .gallery-btn { font-size: 0.9em; background: var(--terracotta); color: white; padding: 5px 15px; border-radius: 15px; border:none; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 5px; }
+        .gallery-btn { font-size: 0.9em; background: var(--terracotta); color: white; padding: 5px 15px; border-radius: 15px; border:none; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 5px; box-shadow: 0 2px 5px var(--shadow); }
 
         header { text-align: center; margin-bottom: 20px; }
         h1 { font-weight: 700; margin: 0 0 10px 0; font-size: 1.8em; line-height: 1.2; }
@@ -76,45 +77,40 @@
         .progress-container { background: var(--chip-bg); border-radius: 20px; height: 8px; width: 100%; overflow: hidden; margin-bottom: 20px; }
         .progress-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--terracotta), var(--gold)); transition: width 0.6s ease; }
 
-        /* Scroller */
+        /* Month Scroller */
         .month-scroller { display: flex; overflow-x: auto; gap: 10px; padding: 5px 5px 15px 5px; margin-bottom: 10px; scrollbar-width: none; }
         .month-scroller::-webkit-scrollbar { display: none; }
         .month-chip { flex: 0 0 auto; padding: 8px 18px; border-radius: 20px; background: var(--card-bg); color: var(--text-muted); font-weight: 600; font-size: 0.9em; cursor: pointer; box-shadow: 0 2px 5px var(--shadow); transition: 0.2s; border: 1px solid transparent; }
         .month-chip.active { background: var(--terracotta); color: white; box-shadow: 0 4px 10px rgba(208, 94, 94, 0.4); transform: scale(1.05); }
 
-        /* Kalender Grid & Uitlijning Fix */
+        /* Calendar Grid */
         .weekdays { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; font-weight: bold; color: var(--text-muted); margin-bottom: 8px; font-size: 0.75em; text-transform: uppercase; }
         .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
 
         .day-card {
             background: var(--card-bg); border-radius: 12px; aspect-ratio: 1 / 1.35; 
-            padding: 6px 2px; /* Meer padding boven/onder */
+            padding: 6px 2px;
             display: flex; flex-direction: column; 
-            align-items: center; justify-content: space-between; /* Belangrijk voor uitlijning */
+            align-items: center; justify-content: space-between;
             cursor: pointer; border: 2px solid transparent;
             box-shadow: 0 2px 4px var(--shadow); transition: transform 0.1s;
         }
         .day-card:active { transform: scale(0.95); }
 
+        /* Type Borders */
         .day-card[data-type="Retinol"] { border-bottom: 3px solid var(--retinol-border); }
         .day-card[data-type="Peptides"] { border-bottom: 3px solid var(--peptide-border); }
         .day-card[data-type="Mask"] { border-bottom: 3px solid var(--mask-border); }
         .day-card.today { border-color: var(--gold) !important; background: rgba(255, 183, 3, 0.1); }
+        
+        /* Subtle indicator for photo (Background tint) */
+        .day-card.has-selfie { background-color: #e3f2fd; } /* Zacht blauw tintje */
+        body.dark-mode .day-card.has-selfie { background-color: #1e3a8a; }
 
-        /* Interne wrapper zodat tekst altijd centraal staat */
-        .day-content { 
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            flex-grow: 1; width: 100%;
-        }
+        .day-content { display: flex; flex-direction: column; align-items: center; justify-content: center; flex-grow: 1; width: 100%; }
         .day-number { font-weight: 700; font-size: 1.1em; line-height: 1; margin-bottom: 3px; }
         .day-mini-label { font-size: 0.5em; color: var(--text-muted); text-transform: uppercase; white-space: nowrap; overflow: hidden; max-width: 90%; }
         
-        /* Icoontje voor selfie (absolute positie voor betere layout) */
-        .icon-cam-indicator { 
-            display: none; font-size: 0.7em; position: absolute; top: 4px; right: 4px; 
-        } 
-        .day-card.has-selfie .icon-cam-indicator { display: block; }
-
         .dots { display: flex; gap: 3px; height: 6px; }
         .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--chip-bg); }
         .dot.done { background: var(--success); }
@@ -124,16 +120,34 @@
         .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: none; align-items: flex-end; justify-content: center; z-index: 2000; backdrop-filter: blur(2px); }
         .modal-content { background: var(--modal-bg); width: 100%; max-width: 500px; padding: 25px; border-radius: 25px 25px 0 0; box-shadow: 0 -10px 40px rgba(0,0,0,0.3); animation: slideUp 0.3s; max-height: 90vh; overflow-y: auto; }
         
-        /* Gallery Modal Specifiek */
-        #gallery-modal .modal-content { height: 90vh; display: flex; flex-direction: column; }
+        /* Gallery Modal Styles */
+        #gallery-modal .modal-content { height: 90vh; display: flex; flex-direction: column; padding: 20px; }
+        
+        /* Filter Bar */
+        .filter-bar { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid var(--border-color); scrollbar-width: none; flex-shrink: 0; }
+        .filter-bar::-webkit-scrollbar { display: none; }
+        .filter-chip { padding: 6px 12px; border-radius: 15px; background: var(--chip-bg); font-size: 0.85em; white-space: nowrap; color: var(--text-muted); cursor: pointer; border: 1px solid transparent; }
+        .filter-chip.active { background: var(--terracotta); color: white; }
+
         .gallery-grid { display: flex; flex-direction: column; gap: 15px; overflow-y: auto; flex-grow: 1; padding-bottom: 20px; }
-        .gallery-item { display: flex; gap: 15px; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 15px; }
-        .gallery-img { width: 80px; height: 80px; object-fit: cover; border-radius: 10px; border: 2px solid var(--terracotta); background: #eee; }
-        .gallery-info h4 { margin: 0 0 5px 0; color: var(--terracotta); }
-        .gallery-info p { margin: 0; font-size: 0.9em; color: var(--text-muted); }
+        .gallery-item { display: flex; gap: 15px; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 15px; position: relative; }
+        .gallery-img { width: 90px; height: 90px; object-fit: cover; border-radius: 12px; border: 2px solid var(--border-color); background: #eee; cursor: zoom-in; flex-shrink: 0; }
+        .gallery-info { flex-grow: 1; }
+        .gallery-info h4 { margin: 0 0 5px 0; color: var(--terracotta); font-size: 1em; }
+        .gallery-tags { display: flex; flex-wrap: wrap; gap: 4px; }
+        .mini-tag { font-size: 0.75em; background: var(--chip-bg); padding: 2px 8px; border-radius: 4px; color: var(--text-muted); }
+        
+        /* Delete Button */
+        .btn-delete { background: var(--chip-bg); border: none; width: 35px; height: 35px; border-radius: 50%; color: var(--danger); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.2em; flex-shrink: 0; }
+
         .no-photos { text-align: center; padding: 40px; color: var(--text-muted); font-style: italic; }
 
-        /* Form Elements */
+        /* Lightbox (Zoom) */
+        #lightbox { position: fixed; inset: 0; background: black; z-index: 3000; display: none; align-items: center; justify-content: center; animation: fadeIn 0.2s; }
+        #lightbox img { max-width: 100%; max-height: 100%; object-fit: contain; }
+        #lightbox-close { position: absolute; top: 20px; right: 20px; color: white; font-size: 2em; cursor: pointer; background: rgba(0,0,0,0.5); width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 50%; }
+
+        /* Routine & Camera Button */
         .routine-box { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; padding: 15px; margin-bottom: 12px; cursor: pointer; display: flex; align-items: flex-start; transition: 0.2s; box-shadow: 0 4px 10px var(--shadow); }
         .routine-box.completed { background: rgba(39, 174, 96, 0.1); border-color: var(--success); }
         .check-circle { min-width: 26px; height: 26px; border-radius: 50%; border: 2px solid #ddd; margin-right: 15px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 14px; }
@@ -143,7 +157,6 @@
         .routine-list { margin: 0; padding-left: 15px; font-size: 0.9em; color: var(--text-muted); line-height: 1.5; }
         strong { color: var(--terracotta); }
 
-        /* Camera Buttons */
         .btn-camera { 
             display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%;
             padding: 12px; background: var(--chip-bg); border-radius: 12px; cursor: pointer;
@@ -151,7 +164,19 @@
         }
         .btn-camera.has-photo { border-color: var(--success); background: rgba(39, 174, 96, 0.1); color: var(--success); }
         
-        .btn-close { width: 100%; padding: 14px; background: var(--chip-bg); border: none; border-radius: 12px; font-weight: bold; color: var(--text); margin-top: 10px; }
+        /* Modal Extras */
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .modal-title h2 { margin: 0; font-size: 1.4em; color: var(--text); }
+        .diary-section { margin-top: 20px; padding-top: 15px; border-top: 1px solid var(--border-color); }
+        .diary-title { font-size: 0.9em; font-weight: bold; margin-bottom: 10px; color: var(--text-muted); }
+        .stars { display: flex; gap: 8px; margin-bottom: 15px; }
+        .star { font-size: 1.8em; cursor: pointer; color: var(--border-color); transition: 0.2s; }
+        .star.active { color: var(--gold); }
+        .tags-container { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 15px; }
+        .tag-chip { padding: 6px 12px; border-radius: 15px; background: var(--chip-bg); color: var(--text-muted); font-size: 0.85em; cursor: pointer; border: 1px solid transparent; }
+        .tag-chip.selected { background: var(--terracotta); color: white; }
+        
+        .btn-close { width: 100%; padding: 14px; background: var(--chip-bg); border: none; border-radius: 12px; font-weight: bold; color: var(--text); margin-top: 10px; font-size: 1em; }
 
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
@@ -209,6 +234,12 @@
             </div>
         </div>
 
+        <div class="diary-section">
+            <div class="diary-title">TAGS & LOG</div>
+            <div class="tags-container" id="tags-container">
+                </div>
+        </div>
+
         <label class="btn-camera" id="btn-camera-label">
             <span id="cam-text">📸 Maak Selfie</span>
             <input type="file" accept="image/*" capture="user" id="camera-input" style="display:none" onchange="handlePhoto(this)">
@@ -220,17 +251,28 @@
 
 <div id="gallery-modal" class="modal-overlay" onclick="closeGalleryDirect(event)">
     <div class="modal-content" onclick="event.stopPropagation()">
-        <h2>📸 Mijn Tijdlijn</h2>
-        <div class="gallery-grid" id="gallery-grid">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+            <h2>📸 Mijn Tijdlijn</h2>
+            <span style="font-size:1.2em; cursor:pointer;" onclick="closeGalleryDirect()">✖</span>
+        </div>
+        
+        <div class="filter-bar" id="gallery-filters">
+            <div class="filter-chip active" onclick="filterGallery('all', this)">Alles</div>
             </div>
-        <button class="btn-close" onclick="closeGalleryDirect()">Sluiten</button>
+
+        <div class="gallery-grid" id="gallery-grid"></div>
     </div>
+</div>
+
+<div id="lightbox" onclick="closeLightbox()">
+    <span id="lightbox-close">&times;</span>
+    <img id="lightbox-img" src="">
 </div>
 
 <div id="settings-modal" class="modal-overlay" onclick="closeSettings(event)">
     <div class="modal-content" onclick="event.stopPropagation()">
         <h2>Instellingen</h2>
-        <p style="color:#888; font-size:0.9em;">Backup je vinkjes. Let op: Foto's zitten NIET in de backup (die zitten in je browser).</p>
+        <p style="color:#888;">Backup je vinkjes. Let op: Foto's zitten NIET in de backup (browser opslag).</p>
         <button class="btn-close" style="background:var(--terracotta); color:white;" onclick="exportData()">💾 Vinkjes Downloaden</button>
         <button class="btn-close" onclick="document.getElementById('file-input').click()">📂 Vinkjes Inladen</button>
         <input type="file" id="file-input" style="display:none" onchange="importData(this)">
@@ -247,99 +289,162 @@
     };
     const weekPattern = ["Peptides", "Retinol", "Peptides", "Mask", "Peptides", "Retinol", "Peptides"];
     const monthNames = ["Januari", "Februari", "Maart", "April", "Mei", "Juni", "Juli", "Augustus", "September", "Oktober", "November", "December"];
+    const availableTags = ["Glow ✨", "Droog 🌵", "Rood 😡", "Puistje 🔴", "Gevoelig 🤕", "Vet 🧈"];
 
     let progressData = JSON.parse(localStorage.getItem('loreSkinData_2026')) || {};
     let currentKey = null;
     let currentMonthIdx = 0;
+    let currentFilter = 'all';
     
-    // --- INDEXED DB (Voor Foto Opslag) ---
+    // --- DB Setup ---
     let db;
     const request = indexedDB.open("LoreSkinDB", 1);
-    
-    request.onupgradeneeded = function(event) {
-        db = event.target.result;
-        if (!db.objectStoreNames.contains("photos")) {
-            db.createObjectStore("photos", { keyPath: "dateKey" });
-        }
+    request.onupgradeneeded = function(e) {
+        db = e.target.result;
+        if (!db.objectStoreNames.contains("photos")) db.createObjectStore("photos", { keyPath: "dateKey" });
     };
-    request.onsuccess = function(event) { db = event.target.result; renderCalendar(currentMonthIdx); };
+    request.onsuccess = function(e) { db = e.target.result; init(); };
 
     // --- Init ---
     function init() {
         if(localStorage.getItem('theme') === 'dark') document.body.classList.add('dark-mode');
+        
+        // Tags renderen in Modal
+        const tagContainer = document.getElementById('tags-container');
+        availableTags.forEach(tag => {
+            const el = document.createElement('div');
+            el.className = 'tag-chip';
+            el.innerText = tag;
+            el.onclick = () => toggleTag(tag, el);
+            tagContainer.appendChild(el);
+        });
+
+        // Filters renderen in Gallery
+        const filterBar = document.getElementById('gallery-filters');
+        availableTags.forEach(tag => {
+            const el = document.createElement('div');
+            el.className = 'filter-chip';
+            el.innerText = tag;
+            el.onclick = () => filterGallery(tag, el);
+            filterBar.appendChild(el);
+        });
+
         generateMonthSelector();
         const now = new Date();
         if(now.getFullYear() === 2026) currentMonthIdx = now.getMonth();
         selectMonth(currentMonthIdx);
     }
 
-    // --- Photo Logic ---
+    // --- Photos & Gallery ---
     function handlePhoto(input) {
         if (input.files && input.files[0]) {
             const file = input.files[0];
             const reader = new FileReader();
-            
             reader.onload = function(e) {
-                const imgData = e.target.result; // Base64 string
+                const imgData = e.target.result; 
+                const tx = db.transaction(["photos"], "readwrite");
+                tx.objectStore("photos").put({ dateKey: currentKey, image: imgData, timestamp: new Date() });
                 
-                // Opslaan in IndexedDB
-                const transaction = db.transaction(["photos"], "readwrite");
-                const store = transaction.objectStore("photos");
-                store.put({ dateKey: currentKey, image: imgData, timestamp: new Date() });
-                
-                // Update UI Direct
                 document.getElementById('cam-text').innerText = "✅ Foto Opgeslagen!";
                 document.getElementById('btn-camera-label').classList.add('has-photo');
                 
-                // Update kalender data (marker dat er een foto is)
-                if(!progressData[currentKey]) progressData[currentKey] = {am:false, pm:false};
+                if(!progressData[currentKey]) progressData[currentKey] = {};
                 progressData[currentKey].hasPhoto = true;
                 localStorage.setItem('loreSkinData_2026', JSON.stringify(progressData));
-                
                 renderCalendar(currentMonthIdx);
             };
             reader.readAsDataURL(file);
         }
     }
 
-    // --- Gallery Logic ---
     function openGallery() {
         document.getElementById('gallery-modal').style.display = 'flex';
+        renderGalleryItems();
+    }
+
+    function filterGallery(tag, el) {
+        currentFilter = tag;
+        // Update active class
+        document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+        if(el) el.classList.add('active');
+        renderGalleryItems();
+    }
+
+    function renderGalleryItems() {
         const grid = document.getElementById('gallery-grid');
         grid.innerHTML = "<div style='text-align:center'>Laden...</div>";
         
-        const transaction = db.transaction(["photos"], "readonly");
-        const store = transaction.objectStore("photos");
-        const request = store.getAll();
+        const tx = db.transaction(["photos"], "readonly");
+        const req = tx.objectStore("photos").getAll();
         
-        request.onsuccess = function() {
-            const photos = request.result;
+        req.onsuccess = function() {
+            let photos = req.result;
             grid.innerHTML = "";
             
-            if(photos.length === 0) {
-                grid.innerHTML = "<div class='no-photos'>Nog geen foto's gemaakt.<br>Klik op een dag en maak een selfie!</div>";
-                return;
-            }
-            
-            // Sorteren op datum (nieuwste boven)
+            // Sorteer nieuwste eerst
             photos.sort((a, b) => b.timestamp - a.timestamp);
-            
+
+            let visibleCount = 0;
+
             photos.forEach(photo => {
-                const parts = photo.dateKey.split('-'); // 2026-0-18
+                const dayData = progressData[photo.dateKey] || {};
+                const tags = dayData.tags || [];
+
+                // Filter Logic
+                if (currentFilter !== 'all' && !tags.includes(currentFilter)) {
+                    return; // Skip this photo
+                }
+
+                visibleCount++;
+                const parts = photo.dateKey.split('-'); 
                 const dateStr = `${parts[2]} ${monthNames[parseInt(parts[1])]}`;
                 
+                const tagsHTML = tags.length > 0 
+                    ? tags.map(t => `<span class="mini-tag">${t}</span>`).join('') 
+                    : '<span style="font-size:0.8em; color:#ccc">Geen tags</span>';
+
                 const div = document.createElement('div');
                 div.className = 'gallery-item';
                 div.innerHTML = `
-                    <img src="${photo.image}" class="gallery-img">
+                    <img src="${photo.image}" class="gallery-img" onclick="openLightbox('${photo.image}')">
                     <div class="gallery-info">
                         <h4>${dateStr}</h4>
-                        <p>Huid Check-in</p>
+                        <div class="gallery-tags">${tagsHTML}</div>
                     </div>
+                    <button class="btn-delete" onclick="deletePhoto('${photo.dateKey}')">🗑️</button>
                 `;
                 grid.appendChild(div);
             });
+
+            if(visibleCount === 0) {
+                grid.innerHTML = "<div class='no-photos'>Geen foto's gevonden met dit filter.</div>";
+            }
         };
+    }
+
+    function deletePhoto(key) {
+        if(!confirm("Ben je zeker dat je deze foto wil verwijderen?")) return;
+        
+        const tx = db.transaction(["photos"], "readwrite");
+        tx.objectStore("photos").delete(key);
+        
+        tx.oncomplete = function() {
+            // Update localStorage state
+            if(progressData[key]) {
+                progressData[key].hasPhoto = false;
+                localStorage.setItem('loreSkinData_2026', JSON.stringify(progressData));
+            }
+            renderGalleryItems(); // Refresh Gallery list
+            renderCalendar(currentMonthIdx); // Refresh Calendar markers
+        };
+    }
+
+    function openLightbox(src) {
+        document.getElementById('lightbox-img').src = src;
+        document.getElementById('lightbox').style.display = 'flex';
+    }
+    function closeLightbox() {
+        document.getElementById('lightbox').style.display = 'none';
     }
 
     // --- Calendar Logic ---
@@ -380,16 +485,14 @@
             const data = progressData[key] || {};
             const type = weekPattern[new Date(2026, mIdx, d).getDay()];
             const isToday = isCurrentMonth && today.getDate() === d;
-            
-            const card = document.createElement('div');
             const hasSelfie = data.hasPhoto ? 'has-selfie' : '';
             
+            const card = document.createElement('div');
             card.className = `day-card ${data.am && data.pm ? 'all-done' : ''} ${isToday ? 'today' : ''} ${hasSelfie}`;
             card.setAttribute('data-type', type);
             card.onclick = () => openModal(mIdx, d, type, key);
             
             card.innerHTML = `
-                <span class="icon-cam-indicator">📸</span>
                 <div class="day-content">
                     <div class="day-number">${d}</div>
                     <div class="day-mini-label">${type}</div>
@@ -406,18 +509,23 @@
     function openModal(m, d, type, key) {
         currentKey = key;
         const r = routines[type];
-        if(!progressData[currentKey]) progressData[currentKey] = {am:false, pm:false};
+        if(!progressData[currentKey]) progressData[currentKey] = {am:false, pm:false, tags:[]};
         
         document.getElementById('modal').style.display = 'flex';
         document.getElementById('modal-date').innerText = `${d} ${monthNames[m]}`;
         
-        // Reset camera button UI
+        // Tags UI
+        const currentTags = progressData[currentKey].tags || [];
+        document.querySelectorAll('.tag-chip').forEach(chip => {
+            chip.classList.toggle('selected', currentTags.includes(chip.innerText));
+        });
+
+        // Camera UI
         const camLabel = document.getElementById('btn-camera-label');
         const camText = document.getElementById('cam-text');
-        
         if (progressData[currentKey].hasPhoto) {
             camLabel.classList.add('has-photo');
-            camText.innerText = "✅ Foto Bekijken in Tijdlijn";
+            camText.innerText = "✅ Foto Opgeslagen";
         } else {
             camLabel.classList.remove('has-photo');
             camText.innerText = "📸 Maak Selfie";
@@ -428,14 +536,26 @@
         updateModalUI();
     }
 
+    function toggleTag(tag, el) {
+        const data = progressData[currentKey];
+        if(!data.tags) data.tags = [];
+        
+        if(data.tags.includes(tag)) {
+            data.tags = data.tags.filter(t => t !== tag);
+        } else {
+            data.tags.push(tag);
+        }
+        el.classList.toggle('selected');
+        localStorage.setItem('loreSkinData_2026', JSON.stringify(progressData));
+    }
+
     function updateModalUI() {
         const data = progressData[currentKey];
         const boxAm = document.getElementById('box-am');
         const boxPm = document.getElementById('box-pm');
-        
         if(data.am) boxAm.classList.add('completed'); else boxAm.classList.remove('completed');
         if(data.pm) boxPm.classList.add('completed'); else boxPm.classList.remove('completed');
-
+        
         const emoji = document.getElementById('modal-emoji');
         if (data.am && data.pm) emoji.innerText = "✨";
         else if (data.am || data.pm) emoji.innerText = "🧴";
@@ -477,9 +597,8 @@
     function closeSettingsDirect() { document.getElementById('settings-modal').style.display = 'none'; }
     function closeModal(e) { if(e.target.id === 'modal') closeModalDirect(); }
     function closeModalDirect() { document.getElementById('modal').style.display = 'none'; }
-    function closeGalleryDirect(e) { if(!e || e.target.id === 'gallery-modal' || e.target.classList.contains('btn-close')) document.getElementById('gallery-modal').style.display = 'none'; }
+    function closeGalleryDirect(e) { if(!e || e.target.id === 'gallery-modal' || e.target.classList.contains('btn-close') || e.target.tagName === 'SPAN') document.getElementById('gallery-modal').style.display = 'none'; }
 
-    // Export/Import (alleen localStorage, fotos zitten in IndexedDB)
     function exportData() {
         const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(progressData));
         const a = document.createElement('a'); a.href = dataStr; a.download = "skin_backup.json"; document.body.appendChild(a); a.click(); a.remove();
@@ -492,7 +611,7 @@
         }; reader.readAsText(file);
     }
     
-    init();
+    init(); // Start!
 </script>
 </body>
 </html>
