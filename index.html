@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Lore's Skin Journey 2026</title>
+    <title>Lore's Skin Care</title>
     
     <link rel="manifest" href="manifest.json">
     <link rel="icon" type="image/jpeg" href="1768758855207.jpg">
     <link rel="apple-touch-icon" href="1768758855207.jpg">
-    <meta name="theme-color" content="#fcfdfc">
+    <meta name="theme-color" content="#f9f5e8">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-capable" content="yes">
 
@@ -19,46 +19,48 @@
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         
         :root {
-            --bg-color: #fcfdfc;
+            /* Palette gebaseerd op de header afbeelding */
+            --bg-color: #fcfbf7;        /* Warme crème achtergrond */
             --card-bg: #ffffff;
-            --text: #4a4a4a;
-            --text-muted: #9ca3af;
+            --text: #5d4037;            /* Donker sepia bruin (zachter dan zwart) */
+            --text-muted: #8d7b75;      /* Lichter bruin/grijs */
             
-            /* Sage Green Palette */
-            --sage-green: #8da399;
-            --sage-dark: #6b8279;
-            --sage-light: #f1f8f5;
-            --terracotta: #d05e5e; 
-            --gold: #e0c097;
+            --terracotta: #cc8468;      /* De hoofdkleur uit de banner */
+            --sage-green: #8fa89b;      /* De kleur van de blaadjes */
+            --sage-dark: #6e857a;       /* Iets donkerder voor tekst */
+            --sage-light: #f1f6f4;      /* Achtergrondjes */
             
-            --success: var(--sage-green);
+            --gold: #e8cf88;            /* De kleur van de bloemen */
+            
+            --success: #8fa89b;         /* Succes is nu sage green */
             --danger: #e74c3c;
-            --border-color: #f3f4f6;
+            --border-color: #f0ebe5;
             --modal-bg: #ffffff;
-            --chip-bg: #f5f7f6;
-            --shadow: rgba(0,0,0,0.04);
+            --chip-bg: #f4f0ec;
+            --shadow: rgba(93, 64, 55, 0.08); /* Schaduw met vleugje bruin */
 
-            --retinol-border: #f783ac;
-            --peptide-border: #8da399;
-            --mask-border: #74c0fc;
+            --retinol-border: #d99a9a; /* Zachter roze passend bij terracotta */
+            --peptide-border: #8fa89b; /* Sage */
+            --mask-border: #9abfd9;    /* Zacht blauw */
         }
 
         body.dark-mode {
-            --bg-color: #18181b;
-            --card-bg: #27272a;
-            --text: #e4e4e7;
-            --text-muted: #a1a1aa;
+            --bg-color: #1e1b1a;
+            --card-bg: #2d2a29;
+            --text: #e6e0dc;
+            --text-muted: #a8a09d;
+            --terracotta: #d99a85;
             --sage-green: #a3b8b0;
             --sage-dark: #8da399;
-            --sage-light: #2c3834;
-            --border-color: #3f3f46;
-            --modal-bg: #27272a;
-            --chip-bg: #3f3f46;
-            --shadow: rgba(0,0,0,0.3);
+            --sage-light: #363b39;
+            --border-color: #3f3b39;
+            --modal-bg: #2d2a29;
+            --chip-bg: #3f3b39;
+            --shadow: rgba(0,0,0,0.4);
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
             background-color: var(--bg-color);
             color: var(--text);
             margin: 0;
@@ -72,29 +74,37 @@
         .container { max-width: 500px; margin: 0 auto; width: 100%; }
 
         /* Top Nav */
-        .top-nav { display: flex; justify-content: space-between; margin-bottom: 10px; }
+        .top-nav { display: flex; justify-content: space-between; margin-bottom: 15px; }
         .icon-btn { background: none; border: none; font-size: 1.5em; cursor: pointer; color: var(--text); padding: 5px; }
-        .gallery-btn { font-size: 0.9em; background: var(--sage-dark); color: white; padding: 6px 16px; border-radius: 20px; border:none; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 6px; box-shadow: 0 2px 5px var(--shadow); transition: 0.2s; }
+        .gallery-btn { font-size: 0.9em; background: var(--terracotta); color: white; padding: 6px 16px; border-radius: 20px; border:none; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 6px; box-shadow: 0 2px 5px var(--shadow); transition: 0.2s; }
         .gallery-btn:active { transform: scale(0.98); }
 
+        /* Header Image */
         header { text-align: center; margin-bottom: 25px; }
-        h1 { font-weight: 700; margin: 0 0 10px 0; font-size: 1.8em; line-height: 1.2; letter-spacing: -0.5px; }
-        .name-highlight { color: var(--terracotta); font-family: 'Georgia', serif; font-style: italic; }
+        
+        .header-banner {
+            width: 100%;
+            height: auto;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px var(--shadow);
+            margin-bottom: 15px;
+            display: block;
+        }
 
         .stats-row { display: flex; justify-content: space-between; align-items: center; font-size: 0.85em; color: var(--text-muted); margin-bottom: 15px; padding: 0 5px; font-weight: 500; }
-        .streak-badge { background: var(--card-bg); padding: 5px 12px; border-radius: 12px; box-shadow: 0 2px 8px var(--shadow); font-weight: bold; color: var(--sage-dark); border: 1px solid var(--border-color); }
+        .streak-badge { background: var(--card-bg); padding: 5px 12px; border-radius: 12px; box-shadow: 0 2px 8px var(--shadow); font-weight: bold; color: var(--terracotta); border: 1px solid var(--border-color); }
 
         /* Progress Bar */
-        .progress-container { background: var(--chip-bg); border-radius: 20px; height: 6px; width: 100%; overflow: hidden; margin-bottom: 25px; }
-        .progress-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--sage-green), var(--sage-dark)); transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
+        .progress-container { background: var(--chip-bg); border-radius: 20px; height: 8px; width: 100%; overflow: hidden; margin-bottom: 25px; }
+        .progress-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--terracotta), var(--gold)); transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
 
         /* Month Scroller */
         .month-scroller { display: flex; overflow-x: auto; gap: 8px; padding: 5px 5px 15px 5px; margin-bottom: 10px; scrollbar-width: none; }
         .month-scroller::-webkit-scrollbar { display: none; }
         .month-chip { flex: 0 0 auto; padding: 8px 16px; border-radius: 18px; background: var(--card-bg); color: var(--text-muted); font-weight: 600; font-size: 0.9em; cursor: pointer; box-shadow: 0 2px 4px var(--shadow); transition: 0.2s; border: 1px solid var(--border-color); }
-        .month-chip.active { background: var(--sage-dark); color: white; border-color: var(--sage-dark); box-shadow: 0 4px 12px rgba(107, 130, 121, 0.3); transform: translateY(-1px); }
+        .month-chip.active { background: var(--terracotta); color: white; border-color: var(--terracotta); box-shadow: 0 4px 12px rgba(204, 132, 104, 0.4); transform: translateY(-1px); }
 
-        /* --- NIEUWE KALENDER GRID --- */
+        /* --- NIEUWE KALENDER GRID (GROTERE KAARTJES) --- */
         .calendar-grid { 
             display: grid; 
             grid-template-columns: repeat(7, 1fr); 
@@ -103,27 +113,30 @@
 
         .day-card {
             background: var(--card-bg); 
-            border-radius: 14px; 
-            aspect-ratio: 1 / 1.25; /* Iets vierkanter */
+            border-radius: 12px; 
+            /* Hier zorgen we voor meer hoogte */
+            aspect-ratio: 1 / 1.6; 
+            min-height: 85px; /* Voorkomt dat ze te klein worden */
+            
             position: relative;
             cursor: pointer; 
             border: 2px solid transparent;
-            box-shadow: 0 3px 6px var(--shadow); 
+            box-shadow: 0 3px 8px var(--shadow); 
             transition: transform 0.1s;
         }
         .day-card:active { transform: scale(0.96); }
 
-        /* Inhoud van de kaart (Absolute positionering voor strakke uitlijning) */
+        /* Ruimere indeling binnen de kaart */
         .card-date {
             position: absolute;
-            top: 6px; left: 8px;
+            top: 6px; left: 6px;
             font-weight: 700; font-size: 1.1em;
             color: var(--text);
         }
         
         .card-dayname {
             position: absolute;
-            top: 8px; right: 8px;
+            top: 8px; right: 6px;
             font-size: 0.6em;
             font-weight: 700;
             color: var(--text-muted);
@@ -132,34 +145,36 @@
 
         .card-focus {
             position: absolute;
-            bottom: 22px; left: 0; right: 0;
+            top: 50%; left: 50%; transform: translate(-50%, -50%); /* Centraal */
+            width: 100%;
             text-align: center;
-            font-size: 0.55em;
+            font-size: 0.6em; /* Iets groter */
             color: var(--text-muted);
             text-transform: uppercase;
-            font-weight: 600;
+            font-weight: 700;
             white-space: nowrap; overflow: hidden;
+            padding: 0 2px;
         }
 
         .card-dots {
             position: absolute;
             bottom: 8px; left: 0; right: 0;
-            display: flex; justify-content: center; gap: 4px;
+            display: flex; justify-content: center; gap: 5px;
         }
-        .dot { width: 5px; height: 5px; border-radius: 50%; background: var(--chip-bg); }
-        .dot.done { background: var(--success); }
+        .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--chip-bg); }
+        .dot.done { background: var(--sage-green); }
 
         /* Borders & States */
-        .day-card[data-type="Retinol"] { border-bottom: 3px solid var(--retinol-border); }
-        .day-card[data-type="Peptides"] { border-bottom: 3px solid var(--peptide-border); }
-        .day-card[data-type="Mask"] { border-bottom: 3px solid var(--mask-border); }
+        .day-card[data-type="Retinol"] { border-bottom: 4px solid var(--retinol-border); }
+        .day-card[data-type="Peptides"] { border-bottom: 4px solid var(--peptide-border); }
+        .day-card[data-type="Mask"] { border-bottom: 4px solid var(--mask-border); }
         
-        .day-card.today { background: rgba(224, 192, 151, 0.15); border-color: var(--gold) !important; }
+        .day-card.today { background: #fffcf5; border-color: var(--gold) !important; }
         .day-card.has-selfie { background-color: var(--sage-light); }
         
         /* Modals */
-        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: none; align-items: flex-end; justify-content: center; z-index: 2000; backdrop-filter: blur(2px); }
-        .modal-content { background: var(--modal-bg); width: 100%; max-width: 500px; padding: 25px; border-radius: 25px 25px 0 0; box-shadow: 0 -10px 40px rgba(0,0,0,0.3); animation: slideUp 0.3s; max-height: 90vh; overflow-y: auto; }
+        .modal-overlay { position: fixed; inset: 0; background: rgba(93, 64, 55, 0.4); display: none; align-items: flex-end; justify-content: center; z-index: 2000; backdrop-filter: blur(3px); }
+        .modal-content { background: var(--modal-bg); width: 100%; max-width: 500px; padding: 25px; border-radius: 25px 25px 0 0; box-shadow: 0 -10px 40px rgba(0,0,0,0.2); animation: slideUp 0.3s; max-height: 90vh; overflow-y: auto; }
         
         /* Gallery Modal */
         #gallery-modal .modal-content { height: 90vh; display: flex; flex-direction: column; padding: 20px; }
@@ -167,34 +182,35 @@
         .filter-bar { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 10px; border-bottom: 1px solid var(--border-color); scrollbar-width: none; flex-shrink: 0; }
         .filter-bar::-webkit-scrollbar { display: none; }
         .filter-chip { padding: 6px 12px; border-radius: 15px; background: var(--chip-bg); font-size: 0.85em; white-space: nowrap; color: var(--text-muted); cursor: pointer; border: 1px solid transparent; transition: 0.2s; }
-        .filter-chip.active { background: var(--sage-dark); color: white; }
+        .filter-chip.active { background: var(--terracotta); color: white; }
 
         .gallery-grid { display: flex; flex-direction: column; gap: 15px; overflow-y: auto; flex-grow: 1; padding-bottom: 20px; }
         .gallery-item { display: flex; gap: 15px; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 15px; }
         .gallery-img { width: 90px; height: 90px; object-fit: cover; border-radius: 12px; border: 2px solid var(--border-color); background: #eee; cursor: zoom-in; flex-shrink: 0; }
-        .gallery-info h4 { margin: 0 0 5px 0; color: var(--sage-dark); font-size: 1em; }
+        .gallery-info { flex-grow: 1; }
+        .gallery-info h4 { margin: 0 0 5px 0; color: var(--terracotta); font-size: 1em; }
         .gallery-tags { display: flex; flex-wrap: wrap; gap: 4px; }
         .mini-tag { font-size: 0.75em; background: var(--chip-bg); padding: 2px 8px; border-radius: 4px; color: var(--text-muted); }
         .btn-delete { background: var(--chip-bg); border: none; width: 35px; height: 35px; border-radius: 50%; color: var(--danger); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.2em; flex-shrink: 0; }
         .no-photos { text-align: center; padding: 40px; color: var(--text-muted); font-style: italic; }
 
         /* Lightbox */
-        #lightbox { position: fixed; inset: 0; background: black; z-index: 3000; display: none; align-items: center; justify-content: center; animation: fadeIn 0.2s; }
+        #lightbox { position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 3000; display: none; align-items: center; justify-content: center; animation: fadeIn 0.2s; }
         #lightbox img { max-width: 100%; max-height: 100%; object-fit: contain; }
-        #lightbox-close { position: absolute; top: 20px; right: 20px; color: white; font-size: 2em; cursor: pointer; background: rgba(0,0,0,0.5); width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 50%; }
+        #lightbox-close { position: absolute; top: 20px; right: 20px; color: white; font-size: 2em; cursor: pointer; background: rgba(255,255,255,0.2); width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 50%; }
 
         /* Form */
         .routine-box { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; padding: 15px; margin-bottom: 12px; cursor: pointer; display: flex; align-items: flex-start; transition: 0.2s; box-shadow: 0 4px 10px var(--shadow); }
-        .routine-box.completed { background: var(--sage-light); border-color: var(--success); }
+        .routine-box.completed { background: var(--sage-light); border-color: var(--sage-green); }
         .check-circle { min-width: 26px; height: 26px; border-radius: 50%; border: 2px solid #ddd; margin-right: 15px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 14px; }
-        .routine-box.completed .check-circle { background: var(--success); border-color: var(--success); }
+        .routine-box.completed .check-circle { background: var(--sage-green); border-color: var(--sage-green); }
         .routine-box.completed .check-circle::after { content: "✓"; }
         .routine-content h4 { margin: 0 0 5px 0; font-size: 1em; color: var(--text); }
         .routine-list { margin: 0; padding-left: 15px; font-size: 0.9em; color: var(--text-muted); line-height: 1.5; }
         strong { color: var(--terracotta); }
 
         .btn-camera { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; padding: 14px; background: var(--chip-bg); border-radius: 14px; cursor: pointer; margin-top: 15px; font-weight: bold; color: var(--text); border: 2px dashed var(--border-color); transition: 0.2s; }
-        .btn-camera.has-photo { border-color: var(--success); background: var(--sage-light); color: var(--success); }
+        .btn-camera.has-photo { border-color: var(--sage-green); background: var(--sage-light); color: var(--sage-green); }
         
         .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
         .modal-title h2 { margin: 0; font-size: 1.4em; color: var(--text); }
@@ -202,7 +218,7 @@
         .diary-title { font-size: 0.8em; font-weight: 700; letter-spacing: 0.5px; margin-bottom: 10px; color: var(--text-muted); }
         .tags-container { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 15px; }
         .tag-chip { padding: 8px 14px; border-radius: 18px; background: var(--chip-bg); color: var(--text-muted); font-size: 0.85em; cursor: pointer; border: 1px solid transparent; transition: 0.2s; font-weight: 500; }
-        .tag-chip.selected { background: var(--sage-dark); color: white; }
+        .tag-chip.selected { background: var(--terracotta); color: white; }
         
         .btn-close { width: 100%; padding: 14px; background: var(--chip-bg); border: none; border-radius: 14px; font-weight: bold; color: var(--text); margin-top: 10px; font-size: 1em; cursor: pointer; }
 
@@ -221,7 +237,7 @@
     </div>
 
     <header>
-        <h1>✨ <span class="name-highlight">Lore's</span> Skin Journey</h1>
+        <img src="1768761587176.jpg" alt="Lore's Skin Care" class="header-banner">
         
         <div class="stats-row">
             <span id="progress-text">0% voltooid</span>
@@ -363,11 +379,10 @@
                 const img = new Image();
                 img.src = e.target.result;
                 img.onload = function() {
-                    // Compressie Logica
                     const canvas = document.createElement('canvas');
                     const ctx = canvas.getContext('2d');
                     
-                    const MAX_WIDTH = 1024; // Max grootte
+                    const MAX_WIDTH = 1024; 
                     const MAX_HEIGHT = 1024;
                     let width = img.width;
                     let height = img.height;
@@ -382,7 +397,6 @@
                     canvas.height = height;
                     ctx.drawImage(img, 0, 0, width, height);
 
-                    // Opslaan als JPEG met lagere kwaliteit
                     const dataUrl = canvas.toDataURL("image/jpeg", 0.7);
 
                     const tx = db.transaction(["photos"], "readwrite");
@@ -568,7 +582,7 @@
         data[period] = !data[period];
         localStorage.setItem('loreSkinData_2026', JSON.stringify(progressData));
         updateModalUI(); renderCalendar(currentMonthIdx); updateStats();
-        if(data.am && data.pm && !wasDone) confetti({ particleCount: 150, spread: 60, origin: { y: 0.7 }, colors: ['#d05e5e', '#e0c097', '#8da399'] });
+        if(data.am && data.pm && !wasDone) confetti({ particleCount: 150, spread: 60, origin: { y: 0.7 }, colors: ['#cc8468', '#e8cf88', '#8fa89b'] });
     }
 
     function updateStats() {
