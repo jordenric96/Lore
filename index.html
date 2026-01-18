@@ -28,7 +28,6 @@
             --sage-green: #8fa89b;
             --sage-dark: #6e857a;
             --sage-light: #f1f6f4;
-            
             --gold: #e8cf88;
             
             --success: #8fa89b;
@@ -63,8 +62,8 @@
             background-color: var(--bg-color);
             color: var(--text);
             margin: 0;
-            /* Layout fix: Zorgt voor veilige marges links/rechts */
-            padding: 20px 20px 40px 20px;
+            /* AANGEPAST: Minder padding aan zijkanten (was 20px) voor meer ruimte */
+            padding: 20px 10px 40px 10px;
             overflow-x: hidden;
             user-select: none;
             min-height: 100vh;
@@ -78,7 +77,7 @@
         }
 
         /* Top Nav */
-        .top-nav { display: flex; justify-content: space-between; margin-bottom: 15px; }
+        .top-nav { display: flex; justify-content: space-between; margin-bottom: 15px; padding: 0 5px; }
         .icon-btn { background: none; border: none; font-size: 1.5em; cursor: pointer; color: var(--text); padding: 5px; }
         .gallery-btn { font-size: 0.9em; background: var(--terracotta); color: white; padding: 6px 16px; border-radius: 20px; border:none; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 6px; box-shadow: 0 2px 5px var(--shadow); transition: 0.2s; }
         .gallery-btn:active { transform: scale(0.98); }
@@ -112,39 +111,46 @@
         .calendar-grid { 
             display: grid; 
             grid-template-columns: repeat(7, 1fr); 
-            gap: 8px; /* Ruimte tussen kaartjes */
+            /* AANGEPAST: Kleinere gap (was 8px) voorkomt overflow */
+            gap: 4px; 
             width: 100%;
         }
 
         .day-card {
             background: var(--card-bg); 
-            border-radius: 12px; 
-            aspect-ratio: 1 / 1.6; 
-            min-height: 85px; 
+            border-radius: 10px; 
+            aspect-ratio: 1 / 1.5; 
+            min-height: 80px; 
             position: relative;
             cursor: pointer; 
             border: 2px solid transparent;
-            box-shadow: 0 3px 8px var(--shadow); 
+            box-shadow: 0 2px 6px var(--shadow); 
             transition: transform 0.1s;
+            overflow: hidden; /* Zorgt dat content niet buiten kaartje breekt */
         }
         .day-card:active { transform: scale(0.96); }
 
-        .card-date { position: absolute; top: 6px; left: 6px; font-weight: 700; font-size: 1.1em; color: var(--text); }
-        .card-dayname { position: absolute; top: 8px; right: 6px; font-size: 0.6em; font-weight: 700; color: var(--text-muted); text-transform: uppercase; }
+        .card-date { position: absolute; top: 5px; left: 5px; font-weight: 700; font-size: 1em; color: var(--text); }
+        .card-dayname { position: absolute; top: 7px; right: 5px; font-size: 0.55em; font-weight: 700; color: var(--text-muted); text-transform: uppercase; }
         
         .card-focus {
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 100%; text-align: center; font-size: 0.6em; color: var(--text-muted);
-            text-transform: uppercase; font-weight: 700; white-space: nowrap; overflow: hidden; padding: 0 2px;
+            width: 100%; text-align: center; 
+            /* AANGEPAST: Kleinere tekst voor focus */
+            font-size: 0.55em; 
+            color: var(--text-muted);
+            text-transform: uppercase; font-weight: 700; 
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+            padding: 0 2px;
         }
 
-        .card-dots { position: absolute; bottom: 8px; left: 0; right: 0; display: flex; justify-content: center; gap: 5px; }
-        .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--chip-bg); }
+        .card-dots { position: absolute; bottom: 6px; left: 0; right: 0; display: flex; justify-content: center; gap: 4px; }
+        .dot { width: 5px; height: 5px; border-radius: 50%; background: var(--chip-bg); }
         .dot.done { background: var(--sage-green); }
 
-        .day-card[data-type="Retinol"] { border-bottom: 4px solid var(--retinol-border); }
-        .day-card[data-type="Peptides"] { border-bottom: 4px solid var(--peptide-border); }
-        .day-card[data-type="Mask"] { border-bottom: 4px solid var(--mask-border); }
+        .day-card[data-type="Retinol"] { border-bottom: 3px solid var(--retinol-border); }
+        .day-card[data-type="Peptides"] { border-bottom: 3px solid var(--peptide-border); }
+        .day-card[data-type="Mask"] { border-bottom: 3px solid var(--mask-border); }
         .day-card.today { background: #fffcf5; border-color: var(--gold) !important; }
         .day-card.has-selfie { background-color: var(--sage-light); }
         
@@ -561,11 +567,6 @@
     function calculateStreak() {
         let streak = 0;
         let d = new Date();
-        // Voor de zekerheid: als we in 2026 zitten, gebruik datum, anders simuleer vandaag.
-        // Omdat de app voor 2026 is, en we nu waarschijnlijk testen in 2024/25, is de streak 0 tenzij we data hebben.
-        // De logica hieronder werkt universeel op basis van de datum van vandaag.
-        
-        // Helper
         const getKey = (dateObj) => `${2026}-${dateObj.getMonth()}-${dateObj.getDate()}`; // FORCE 2026 JAAR
         const hasData = (dateObj) => {
             const k = getKey(dateObj);
@@ -573,14 +574,14 @@
             return entry && (entry.am || entry.pm);
         };
 
-        // 1. Check Vandaag
+        // Check vandaag
         if (!hasData(d)) {
-            // Als vandaag leeg is, check gisteren (misschien moet je vandaag nog invullen)
+            // Als vandaag leeg is, check gisteren
             d.setDate(d.getDate() - 1);
-            if (!hasData(d)) return 0; // Gisteren ook leeg? Dan streak 0.
+            if (!hasData(d)) return 0; // Gisteren ook leeg? 0 streak.
         }
 
-        // 2. Loop terug
+        // Terugtellen
         while (true) {
             if (hasData(d)) {
                 streak++;
